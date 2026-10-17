@@ -48,7 +48,7 @@ Open an issue with the **Component request** template first. It should answer:
 
 - Branch from `main`: `feat/segmented-control`, `fix/switch-contrast`, `docs/tokens-page`.
 - Use [Conventional Commits](https://www.conventionalcommits.org/): `feat(button): add tonal variant`,
-  `fix(table): keep header sticky in dense mode`, `docs: clarify surface roles`.
+  `fix(table): keep header sticky in compact mode`, `docs: clarify surface roles`.
 - Add an entry under **Unreleased** in `CHANGELOG.md`. Say what changed from a consumer's point of view.
 - Run `python3 scripts/build_tokens.py` (zero failing checks) and `python3 scripts/check_version.py`.
 - Fill in the pull request template. It includes the accessibility checklist from

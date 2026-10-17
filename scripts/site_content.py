@@ -11,6 +11,12 @@ def I(name, cls=""):
     return '<svg class="h-icon%s" aria-hidden="true"><use href="#i-%s"/></svg>' % (extra, name)
 
 
+def _ic(html):
+    """Fill @NAME@ icon markers in demo markup without clashing with literal percent signs."""
+    import re
+    return re.sub(r"@([A-Z-]+)@", lambda m: I(m.group(1).lower(), "h-icon--sm" if m.group(1) == "ARROW-UP-DOWN" else ""), html)
+
+
 def MARK(cls="h-icon--lg h-icon--brand"):
     return '<svg class="h-icon %s" aria-hidden="true"><use href="#hali-mark"/></svg>' % cls
 
@@ -166,6 +172,49 @@ add(
 )
 
 add(
+    id="inline-edit", title="Inline edit", group="Forms",
+    blurb="Inline edit lets people change a single value where it is shown, without opening a form.",
+    demos=[
+        ("Text and number", _ic("""
+<div class="h-stack h-gap-16">
+  <div>
+    <div class="h-label">Role name</div>
+    <div class="h-inline-edit" data-inline-edit>
+      <button type="button" class="h-inline-edit__display" aria-label="Edit role name, currently Host"><span class="h-inline-edit__value">Host</span>@EDIT@</button>
+      <form class="h-inline-edit__form" hidden>
+        <input class="h-input h-input--sm h-inline-edit__input" value="Host" aria-label="Role name" required maxlength="24">
+        <button type="submit" class="h-button h-button--bold h-button--sm h-button--icon" aria-label="Save">@CHECK@</button>
+        <button type="button" class="h-button h-button--subtle h-button--sm h-button--icon" aria-label="Cancel" data-inline-cancel>@CLOSE@</button>
+      </form>
+      <div class="h-inline-edit__error" role="alert" hidden></div>
+    </div>
+  </div>
+  <div>
+    <div class="h-label">Share of tips</div>
+    <div class="h-inline-edit" data-inline-edit data-suffix="%">
+      <button type="button" class="h-inline-edit__display" aria-label="Edit share of tips, currently 60%"><span class="h-inline-edit__value">60%</span>@EDIT@</button>
+      <form class="h-inline-edit__form" hidden>
+        <input class="h-input h-input--sm h-inline-edit__input" type="number" inputmode="numeric" min="0" max="100" value="60" aria-label="Share of tips in percent" required style="width:88px">
+        <button type="submit" class="h-button h-button--bold h-button--sm h-button--icon" aria-label="Save">@CHECK@</button>
+        <button type="button" class="h-button h-button--subtle h-button--sm h-button--icon" aria-label="Cancel" data-inline-cancel>@CLOSE@</button>
+      </form>
+      <div class="h-inline-edit__error" role="alert" hidden></div>
+    </div>
+  </div>
+</div>"""), {}),
+    ],
+    use=["Use it for one short value that people change often: a name, a percentage, a limit.",
+         "Show the pencil on hover and focus so the value still reads as plain text at rest.",
+         "Validate with native constraints such as `required`, `min` and `max`. The message appears under the field.",
+         "Listen for `hali:inline-save` to send the value to your server. Call `preventDefault()` to stop Hali updating the text."],
+    avoid=["Using it for long text or several related fields. Open a dialog or a side sheet instead.",
+           "Saving on blur. Keep Save and Cancel explicit so a stray click never changes money or access."],
+    a11y=["The display button's label names the field and its current value.",
+          "Enter saves, Escape cancels, and focus returns to the display button either way.",
+          "Errors are `role=\"alert\"` and the input gets `aria-invalid`."],
+)
+
+add(
     id="choice", title="Checkbox and radio", group="Forms",
     blurb="Checkboxes select any number of options. Radios select exactly one.",
     demos=[
@@ -268,6 +317,14 @@ add(
   <span class="h-lozenge h-lozenge--bold h-is-danger">Blocked</span>
   <span class="h-lozenge h-lozenge--bold h-is-info">Review</span>
   <span class="h-lozenge h-lozenge--bold h-is-discovery">New</span>
+</div>""", {}),
+        ("With a dot or outline", """
+<div class="h-cluster">
+  <span class="h-lozenge h-is-success"><span class="h-dot"></span>Online</span>
+  <span class="h-lozenge"><span class="h-dot"></span>Offline</span>
+  <span class="h-lozenge h-is-warning"><span class="h-dot"></span>Degraded</span>
+  <span class="h-lozenge h-lozenge--outline h-is-info">Scheduled</span>
+  <span class="h-lozenge h-lozenge--outline">Archived</span>
 </div>""", {}),
         ("Badges and dots", """
 <div class="h-cluster h-gap-16">
@@ -655,7 +712,7 @@ add(
 
 add(
     id="table", title="Table", group="Data",
-    blurb="Tables compare records across attributes. Numbers align right and use tabular figures.",
+    blurb="Tables compare records across attributes. Numbers align right and use tabular figures. Add search, selection, a bulk action bar and row density with data-table-tools.",
     demos=[
         ("Table with toolbar", """
 <div class="h-table-wrap">
@@ -683,9 +740,56 @@ add(
     </tbody>
   </table>
 </div>""" % (I("search"), I("filter"), I("plus"), I("arrow-up-down", "h-icon--sm"), I("arrow-up-down", "h-icon--sm"), I("warning"), I("check"), I("error")), {"layout": "plain"}),
-        ("Dense", """
-<div class="h-table-wrap" style="max-width:520px">
-  <table class="h-table h-table--dense">
+        ("Search, selection and bulk actions", _ic("""
+<div class="h-table-wrap" data-table-tools>
+  <div class="h-toolbar">
+    <div class="h-input-group" style="width:240px">@SEARCH@<input class="h-input h-input--sm" type="search" placeholder="Search people" aria-label="Search people" data-table-search></div>
+    <span class="h-toolbar__count" data-table-count aria-live="polite"></span>
+    <span class="h-spacer"></span>
+    <button class="h-button h-button--bold h-button--sm">@PLUS@ Invite people</button>
+  </div>
+  <div class="h-batchbar" data-batchbar hidden role="region" aria-label="Bulk actions">
+    <span class="h-batchbar__count" data-batch-count aria-live="polite">0 selected</span>
+    <button class="h-button h-button--tonal h-button--sm">@MAIL@ Message</button>
+    <button class="h-button h-button--tonal h-button--sm">@DOWNLOAD@ Export</button>
+    <button class="h-button h-button--danger-tonal h-button--sm">@TRASH@ Remove</button>
+    <span class="h-spacer"></span>
+    <button class="h-button h-button--subtle h-button--sm" data-batch-clear>Clear selection</button>
+  </div>
+  <table class="h-table" data-sortable>
+    <caption class="h-sr-only">People</caption>
+    <thead>
+      <tr>
+        <th scope="col" class="h-table__select"><label class="h-check"><input type="checkbox" data-select-all aria-label="Select all people"></label></th>
+        <th scope="col" aria-sort="ascending"><button class="h-table__sort">Name @ARROW-UP-DOWN@</button></th>
+        <th scope="col">Role</th>
+        <th scope="col">Status</th>
+        <th scope="col" data-numeric><button class="h-table__sort">Shifts @ARROW-UP-DOWN@</button></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="h-table__select"><label class="h-check"><input type="checkbox" data-select-row aria-label="Select Ana Ruiz"></label></td><td>Ana Ruiz</td><td>Host</td><td><span class="h-lozenge h-is-success"><span class="h-dot"></span>Active</span></td><td data-numeric>18</td></tr>
+      <tr><td class="h-table__select"><label class="h-check"><input type="checkbox" data-select-row aria-label="Select Ben Cole"></label></td><td>Ben Cole</td><td>Security</td><td><span class="h-lozenge h-is-success"><span class="h-dot"></span>Active</span></td><td data-numeric>22</td></tr>
+      <tr><td class="h-table__select"><label class="h-check"><input type="checkbox" data-select-row aria-label="Select Cam Diaz"></label></td><td>Cam Diaz</td><td>DJ</td><td><span class="h-lozenge"><span class="h-dot"></span>Away</span></td><td data-numeric>9</td></tr>
+      <tr><td class="h-table__select"><label class="h-check"><input type="checkbox" data-select-row aria-label="Select Eli Fox"></label></td><td>Eli Fox</td><td>Dancer</td><td><span class="h-lozenge h-is-warning"><span class="h-dot"></span>Invited</span></td><td data-numeric>0</td></tr>
+    </tbody>
+  </table>
+  <div class="h-empty h-empty--compact" data-table-empty hidden>
+    <div class="h-empty__icon">@SEARCH@</div>
+    <h3 class="h-empty__title">No one matches that search</h3>
+    <p class="h-empty__body">Check the spelling or search by role.</p>
+  </div>
+</div>"""), {"layout": "plain"}),
+        ("Density", """
+<div class="h-table-wrap" data-table-tools style="max-width:560px">
+  <div class="h-toolbar">
+    <div class="h-segmented" role="group" aria-label="Row density">
+      <button type="button" data-density="compact" aria-pressed="false">Compact</button>
+      <button type="button" data-density="default" aria-pressed="true">Default</button>
+      <button type="button" data-density="comfortable" aria-pressed="false">Comfortable</button>
+    </div>
+  </div>
+  <table class="h-table">
     <caption class="h-sr-only">Recent deploys</caption>
     <thead><tr><th scope="col">Build</th><th scope="col">Branch</th><th scope="col" data-numeric>Time</th></tr></thead>
     <tbody>
@@ -697,10 +801,13 @@ add(
 </div>""", {}),
     ],
     use=["Left align text, right align numbers, and keep column headers short.",
-         "Use the selected row state for bulk actions."],
+         "Use the batch bar for bulk actions. It replaces the toolbar while rows are selected.",
+         "Pick density to match the job: compact for scanning many rows, default for most tables, comfortable for rows with two lines or controls."],
     avoid=["Using a table for layout.", "Hiding important columns on small screens without a way to get them back."],
     a11y=["Use `th scope=\"col\"`, a `caption` or `aria-label`, and `aria-sort` on the sorted column.",
-          "Sortable headers contain a real `button`. Wrap wide tables in `h-table-wrap` so they scroll without breaking the page."],
+          "Sortable headers contain a real `button`. Wrap wide tables in `h-table-wrap` so they scroll without breaking the page.",
+          "Row checkboxes need a label that names the row. The select all checkbox shows a mixed state when only some rows are selected.",
+          "The selected count and the match count are `aria-live=\"polite\"` so changes are announced."],
 )
 
 add(
@@ -769,8 +876,24 @@ add(
   <p class="h-empty__body">Check the spelling or try fewer filters.</p>
   <div class="h-empty__actions"><button class="h-button h-button--outline">Clear filters</button></div>
 </div>""" % I("search"), {"bg": "raised"}),
+        ("Compact, inside a table or card", _ic("""
+<div class="h-table-wrap">
+  <table class="h-table">
+    <caption class="h-sr-only">Events</caption>
+    <thead><tr><th scope="col">Event</th><th scope="col">Date</th><th scope="col">Status</th></tr></thead>
+    <tbody><tr><td class="h-table__empty" colspan="3">
+      <div class="h-empty h-empty--compact">
+        <div class="h-empty__icon">@CALENDAR@</div>
+        <h3 class="h-empty__title">No events yet</h3>
+        <p class="h-empty__body">Events you schedule show up here.</p>
+        <div class="h-empty__actions"><button class="h-button h-button--bold h-button--sm">@PLUS@ Schedule an event</button></div>
+      </div>
+    </td></tr></tbody>
+  </table>
+</div>"""), {"layout": "plain"}),
     ],
-    use=["Say what this space is for, then say how to fill it.", "Offer one clear primary action."],
+    use=["Say what this space is for, then say how to fill it.", "Offer one clear primary action.",
+         "Use `h-empty--compact` inside tables, cards and panels so the empty state does not dwarf its container."],
     avoid=["Humor that makes a real problem feel small.", "Empty states with no action."],
 )
 
@@ -1047,5 +1170,7 @@ STATUS_TABLE = [
     ("Tabs, breadcrumbs, pagination, top bar, side navigation, rail", "Stable", "1.0.0"),
     ("Menu, dropdown, tooltip, dialog, side sheet", "Stable", "1.0.0"),
     ("Table with toolbar, sorting and selection styles", "Stable", "1.0.0"),
+    ("Table search, selection, bulk action bar and row density", "Stable", "2.0.0"),
+    ("Inline edit, lozenge dot and outline, compact empty state", "Stable", "2.0.0"),
     ("Date picker, combobox, tree view, stepper, charts", "Planned", "after 1.0"),
 ]

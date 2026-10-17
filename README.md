@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <strong>Version 1.0.0</strong> &nbsp;|&nbsp; <a href="CHANGELOG.md">Changelog</a> &nbsp;|&nbsp; <a href="docs/VERSIONING.md">Versioning</a> &nbsp;|&nbsp; <a href="CONTRIBUTING.md">Contributing</a>
+  <strong>Version 2.0.0</strong> &nbsp;|&nbsp; <a href="CHANGELOG.md">Changelog</a> &nbsp;|&nbsp; <a href="docs/VERSIONING.md">Versioning</a> &nbsp;|&nbsp; <a href="docs/MIGRATING-2.0.md">Migrating to 2.0</a> &nbsp;|&nbsp; <a href="CONTRIBUTING.md">Contributing</a>
 </p>
 
 ---
@@ -85,7 +85,7 @@ Use the icons by inlining `icons/hali-icons.svg` once per page, then reference a
 hali/
   tokens/        generated tokens: hali-tokens.json, hali-tokens.css, CONTRAST.md
   css/           hali.css: base, layout, typography, components, utilities
-  js/            hali.js: optional behavior for tabs, menus, dialogs, toasts
+  js/            hali.js: optional behavior for tabs, menus, dialogs, toasts, table tools, inline edit
   icons/         hali-icons.svg: 24px line icon sprite
   assets/        the Hali mark
   site/          the generated reference site (open site/index.html)

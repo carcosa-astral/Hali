@@ -8,9 +8,54 @@ design language is spelled out in [docs/VERSIONING.md](docs/VERSIONING.md).
 
 ## [Unreleased]
 
+Nothing yet.
+
+## [2.0.0] - 2026-10-17
+
+The first release shaped by a real application. Designing the Deckhand club management app on Hali 1.0
+showed what data heavy screens need: searchable and selectable tables, a bulk action bar, row density
+that is a decision and not an accident, editing values in place, and clearer status and empty states.
+The additions are listed from the Hali additions log kept during that work. Density is a layout metric
+and the old class name is gone, which is why this is a major release. See
+[docs/MIGRATING-2.0.md](docs/MIGRATING-2.0.md).
+
+### Breaking
+
+- **Removed `h-table--dense`.** Use `h-table--compact`. The compact row height is unchanged at 32px.
+- **Table row height is now defined by tokens.** `--hali-size-row-default` (44px, the same height as
+  before), `--hali-size-row-compact` (32px) and the new `--hali-size-row-comfortable` (56px). Overrides
+  that set `padding-block` on `.h-table td` need to move to these tokens.
+
 ### Added
 
-- MIT `LICENSE` and `license` field in `package.json`.
+- **Data table tools.** Put `data-table-tools` on an `h-table-wrap` to get, with no JavaScript of your own:
+  search that filters rows (`data-table-search`), a live row count (`data-table-count`), a no results
+  slot (`data-table-empty`), a select all checkbox with a mixed state, row selection, a bulk action
+  bar (`h-batchbar`) that replaces the toolbar while rows are selected, and a density switch
+  (`data-density`). A `hali:selectionchange` event reports the selected rows.
+- **Row density.** `h-table--compact`, the default, and `h-table--comfortable`.
+- **Table extras.** `h-table--sticky` for a sticky header, `h-table__select` for the checkbox
+  column, `h-table__empty` for an empty state that fills the table, `h-toolbar__count`.
+- **Inline edit.** `h-inline-edit` with `data-inline-edit`: a value that turns into a field in place, with
+  Save and Cancel, Enter and Escape, native validation, an optional suffix such as `%`, and a
+  cancelable `hali:inline-save` event for saving to a server.
+- **Lozenge dot and outline.** `h-lozenge .h-dot` for online, offline and degraded states, and
+  `h-lozenge--outline` for quiet labels. Status is still carried by the word as well as the dot.
+- **Compact empty state.** `h-empty--compact` for empty tables, cards and panels, with a documented
+  first use pattern that offers one clear next action.
+- **Reference site.** New or extended pages for Table, Inline edit, Lozenge and Empty state, each with
+  live demos.
+
+### Changed
+
+- `.h-table td` vertical padding is computed from the row height tokens. Default and compact rows render at the
+  same height as in 1.0.0.
+- `js/hali.js` now covers table tools and inline edit. It is still optional and dependency free.
+
+### Not changed
+
+The header and side navigation shell, and status lozenges, were on the additions list and already
+existed in 1.0.0. They are unchanged apart from the lozenge dot and outline above.
 
 ## [1.0.0] - 2026-10-17
 
@@ -58,5 +103,6 @@ First stable release. Hali is dark first: dark is the default theme, and light i
 - Inter and JetBrains Mono are named in the font stacks but are not bundled. Without them the system
   fonts are used.
 
-[Unreleased]: https://github.com/carcosa-astral/Hali/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/carcosa-astral/Hali/compare/v2.0.0...HEAD
+[2.0.0]: https://github.com/carcosa-astral/Hali/compare/v1.0.0...v2.0.0
 [1.0.0]: https://github.com/carcosa-astral/Hali/releases/tag/v1.0.0

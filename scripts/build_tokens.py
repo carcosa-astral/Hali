@@ -27,7 +27,7 @@ from hali_color import BLACK, WHITE, contrast, ensure, mix, rgba, shift_l, softe
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT_DIR = os.path.join(ROOT, "tokens")
 
-VERSION = "1.0.0"
+VERSION = "2.0.0"
 
 # ---------------------------------------------------------------------------------------------
 # Stock Nord palette (https://www.nordtheme.com/docs/colors-and-palettes)
@@ -257,6 +257,7 @@ STATIC = {
     "radius": {"xs": 4, "sm": 6, "md": 8, "lg": 12, "xl": 16, "2xl": 28, "full": 9999},
     "size": {
         "control-sm": 28, "control-md": 36, "control-lg": 44,
+        "row-compact": 32, "row-default": 44, "row-comfortable": 56,
         "icon-sm": 16, "icon-md": 20, "icon-lg": 24,
     },
     "motion": {

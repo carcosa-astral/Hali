@@ -1,7 +1,7 @@
 {
   "$meta": {
     "name": "Hali",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "description": "A dark first, Nord based design language that blends Atlassian structure with Material 3 tonal surfaces.",
     "contrast": {
       "text-primary": 7.0,
@@ -342,6 +342,9 @@
       "control-sm": 28,
       "control-md": 36,
       "control-lg": 44,
+      "row-compact": 32,
+      "row-default": 44,
+      "row-comfortable": 56,
       "icon-sm": 16,
       "icon-md": 20,
       "icon-lg": 24

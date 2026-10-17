@@ -773,7 +773,7 @@ def tokens_section():
         lsw = '<span class="doc-dot" style="background:%s"></span>' % lv if is_hex(lv) else ""
         rows.append('<tr data-token="%s"><td><code class="h-code">%s</code></td><td><code class="h-code">%s</code></td><td>%s%s</td><td>%s%s</td></tr>'
                     % (esc((key + " " + css_var(key)).lower()), esc(key), css_var(key), dsw, esc(dv), lsw, esc(lv)))
-    ref = ('<div class="doc-table"><div class="h-table-wrap" style="max-height:520px"><table class="h-table h-table--dense"><thead><tr>'
+    ref = ('<div class="doc-table"><div class="h-table-wrap" style="max-height:520px"><table class="h-table h-table--compact"><thead><tr>'
            '<th scope="col">Token</th><th scope="col">CSS property</th><th scope="col">Dark</th><th scope="col">Light</th></tr></thead><tbody>%s</tbody></table></div></div>' % "".join(rows))
     flt = ('<div class="h-field" style="max-width:360px;margin-top:16px"><label class="h-label" for="token-filter">Filter tokens</label>'
            '<div class="h-input-group">%s<input class="h-input" id="token-filter" type="search" placeholder="surface, danger, brand.bold" autocomplete="off"></div></div>' % I("search"))
