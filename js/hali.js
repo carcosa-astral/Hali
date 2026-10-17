@@ -1,11 +1,11 @@
-/*! Hali design language v2.0.0
+/*! Hali design language v2.1.0
  * Optional behavior for tabs, dropdowns, dialogs, chips, segmented controls, toasts and sortable tables, selectable tables with search, density and a batch bar, and inline editing.
  * No dependencies. Everything is opt in through data attributes.
  */
 (function () {
   'use strict';
 
-  var VERSION = '2.0.0';
+  var VERSION = '2.1.0';
 
   function all(selector, root) {
     return Array.prototype.slice.call((root || document).querySelectorAll(selector));

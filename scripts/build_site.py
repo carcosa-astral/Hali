@@ -41,6 +41,8 @@ DARK = TOKENS["theme"]["dark"]
 LIGHT = TOKENS["theme"]["light"]
 STATIC = TOKENS["static"]
 SPRITE = read("icons/hali-icons.svg")
+SPRITE16 = read("icons/hali-icons-16.svg")
+ICON16_IDS = re.findall(r'<symbol id="i16-([^"]+)"', SPRITE16)
 ICON_IDS = re.findall(r'<symbol id="(i-[^"]+)"', SPRITE)
 
 _, DARK_CHECKS, _ = build_tokens.build_theme("dark")
@@ -581,12 +583,33 @@ def iconography():
   <span class="h-cluster h-gap-8"><svg class="h-icon" aria-hidden="true"><use href="#i-search"/></svg> 20px</span>
   <span class="h-cluster h-gap-8"><svg class="h-icon h-icon--lg" aria-hidden="true"><use href="#i-search"/></svg> 24px</span>
 </div>""")
-    body = ('<p class="doc-p">%d line icons on a 24px grid with a 1.75px stroke and round caps. They take their color from the text around them. Click an icon to copy its markup.</p><div class="doc-icons">%s</div>%s%s'
-            % (len(ICON_IDS), cells, sizes, ul([
+    cells16 = "".join(
+        '<button class="doc-icon" type="button" data-snippet=\'%s\' data-name="%s" aria-label="Copy %s 16px icon markup"><svg class="h-icon h-icon--16" style="width:24px;height:24px" aria-hidden="true"><use href="#i16-%s"/></svg><span>%s</span></button>'
+        % (esc('<svg class="h-icon h-icon--16" aria-hidden="true"><use href="#i16-%s"/></svg>' % n, quote=True), n, n, n, n)
+        for n in ICON16_IDS)
+    duo = demo("Ripple accent", """
+<div class="h-cluster h-gap-24">
+  <svg class="h-icon h-icon--lg" aria-hidden="true"><use href="#i-wifi"/></svg>
+  <svg class="h-icon h-icon--lg" aria-hidden="true"><use href="#i-volume"/></svg>
+  <svg class="h-icon h-icon--lg" aria-hidden="true"><use href="#i-users"/></svg>
+  <svg class="h-icon h-icon--lg h-icon--duo" aria-hidden="true"><use href="#i-wifi"/></svg>
+  <svg class="h-icon h-icon--lg h-icon--duo" aria-hidden="true"><use href="#i-volume"/></svg>
+  <svg class="h-icon h-icon--lg h-icon--duo" aria-hidden="true"><use href="#i-users"/></svg>
+</div>""")
+    small = demo("16px set", """
+<div class="h-cluster h-gap-24">
+  <span class="h-cluster h-gap-8"><svg class="h-icon h-icon--sm" aria-hidden="true"><use href="#i-search"/></svg> Scaled 24px icon</span>
+  <span class="h-cluster h-gap-8"><svg class="h-icon h-icon--16" aria-hidden="true"><use href="#i16-search"/></svg> Drawn for 16px</span>
+</div>""")
+    body = ('<p class="doc-p">%d line icons on a 24px grid with a 1.75px stroke and round caps. They take their color from the text around them. Click an icon to copy its markup.</p><div class="doc-icons">%s</div>'
+            '<h3 class="doc-h3">Ripple accent</h3><p class="doc-p">The 30 icons added in 2.1.0 each draw one detail as a ripple arc, ring or dot, echoing the Hali mark. By default the whole icon is one color. Add <code class="h-code">h-icon--duo</code> and that detail takes the brand color. Icons from 1.0 are single color only.</p>%s'
+            '<h3 class="doc-h3">16px set</h3><p class="doc-p">%d icons drawn for 16px with a 1.5px stroke, so straight strokes land on whole pixels. Inline <code class="h-code">icons/hali-icons-16.svg</code> next to the main sprite and use <code class="h-code">h-icon--16</code>. They are generated from the 24px drawings by <code class="h-code">scripts/build_icons16.py</code>.</p><div class="doc-icons">%s</div>%s%s%s'
+            % (len(ICON_IDS), cells, duo, len(ICON16_IDS), cells16, sizes, small, ul([
                 "Decorative icons get `aria-hidden=\"true\"`. Icon only buttons get an `aria-label` on the button.",
-                "Use 16px inside small controls and dense text, 20px by default, 24px for navigation and empty states.",
+                "Use the 16px set inside small controls and dense text, 20px by default, 24px for navigation and empty states.",
                 "Pair an icon with a label wherever space allows. A bare icon is only as clear as its convention.",
-                "Add an icon by drawing it on the 24px grid with a 1.75px stroke, then adding a `symbol` to `icons/hali-icons.svg`.",
+                "Add an icon by drawing it on the 24px grid with a 1.75px stroke, then adding a `symbol` to `icons/hali-icons.svg`. Add its name to `SET` in `scripts/build_icons16.py` if it needs a 16px version.",
+                "Accent parts use `style=\"stroke:var(--hali-icon-accent,currentColor)\"` so they stay one color unless `h-icon--duo` is set.",
             ])))
     P.section("iconography", "Iconography", body, lead="Quiet line icons that inherit color.")
 
@@ -965,7 +988,7 @@ def build():
 </script>
 </body>
 </html>
-""" % {"v": VERSION, "head_js": A.HEAD_JS, "css": css, "sprite": SPRITE, "topbar": topbar, "nav": P.nav_html(),
+""" % {"v": VERSION, "head_js": A.HEAD_JS, "css": css, "sprite": SPRITE + SPRITE16, "topbar": topbar, "nav": P.nav_html(),
        "main": "\n".join(P.parts), "footer": footer, "js": js}
 
     os.makedirs(OUT_DIR, exist_ok=True)

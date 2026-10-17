@@ -1,5 +1,5 @@
 /*!
- * Hali design language v2.0.0
+ * Hali design language v2.1.0
  * Components and utilities. Requires tokens/hali-tokens.css to be loaded first.
  * Dark first. Class prefix: h-   Custom property prefix: --hali-
  */
@@ -314,6 +314,11 @@
   .h-icon--lg { width: var(--hali-size-icon-lg); height: var(--hali-size-icon-lg); }
   .h-icon--subtle { color: var(--hali-icon-default); }
   .h-icon--brand { color: var(--hali-brand-text); }
+  /* Accent: icons added in 2.1.0 draw one detail (a ripple arc, ring or dot) with --hali-icon-accent. It is
+     the icon color unless .h-icon--duo is set, so every icon still works as a single color icon. */
+  .h-icon--duo { --hali-icon-accent: var(--hali-brand-text); }
+  /* The 16px set (icons/hali-icons-16.svg) is drawn on a 16 grid, so the stroke is 1.5px, not 1.75px. */
+  .h-icon--16 { width: 16px; height: 16px; stroke-width: 1.5; }
 
   /* ---- Button ------------------------------------------------------------------------------ */
   .h-button {

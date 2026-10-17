@@ -29,7 +29,7 @@ open site/index.html
 | --- | --- |
 | A color, status, accent or surface | Edit `scripts/build_tokens.py`, run it, and read the diff in `tokens/`. Commit the generated files. |
 | A component | Edit `css/hali.css` and the matching entry in `scripts/site_content.py`. Show every state in the docs. |
-| An icon | Add a `<symbol id="i-name">` to `icons/hali-icons.svg` on the 24px grid with a 1.75px stroke. The site picks it up automatically. |
+| An icon | Add a `<symbol id="i-name">` to `icons/hali-icons.svg` on the 24px grid with a 1.75px stroke. If it needs a 16px version, add its name to `SET` in `scripts/build_icons16.py` and run it. The site picks both up automatically. |
 | Behavior | Edit `js/hali.js`. Keep it dependency free, opt in through data attributes, and keep keyboard support complete. |
 | Documentation | Edit the markdown in `docs/` or the content in `scripts/site_content.py`. |
 

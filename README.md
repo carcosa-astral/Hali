@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <strong>Version 2.0.0</strong> &nbsp;|&nbsp; <a href="CHANGELOG.md">Changelog</a> &nbsp;|&nbsp; <a href="docs/VERSIONING.md">Versioning</a> &nbsp;|&nbsp; <a href="docs/MIGRATING-2.0.md">Migrating to 2.0</a> &nbsp;|&nbsp; <a href="CONTRIBUTING.md">Contributing</a>
+  <strong>Version 2.1.0</strong> &nbsp;|&nbsp; <a href="CHANGELOG.md">Changelog</a> &nbsp;|&nbsp; <a href="docs/VERSIONING.md">Versioning</a> &nbsp;|&nbsp; <a href="docs/MIGRATING-2.0.md">Migrating to 2.0</a> &nbsp;|&nbsp; <a href="CONTRIBUTING.md">Contributing</a>
 </p>
 
 ---
@@ -73,7 +73,7 @@ Dark is the default. To choose a theme explicitly, set an attribute on the root 
 With no `data-theme`, Hali is dark, and switches to light only when the system asks for it with
 `prefers-color-scheme: light`. `prefers-contrast: more` is honored automatically.
 
-Use the icons by inlining `icons/hali-icons.svg` once per page, then reference a symbol:
+Use the icons by inlining `icons/hali-icons.svg` once per page (and `icons/hali-icons-16.svg` if you want the 16px set), then reference a symbol:
 
 ```html
 <svg class="h-icon" aria-hidden="true"><use href="#i-search"/></svg>
@@ -86,7 +86,7 @@ hali/
   tokens/        generated tokens: hali-tokens.json, hali-tokens.css, CONTRAST.md
   css/           hali.css: base, layout, typography, components, utilities
   js/            hali.js: optional behavior for tabs, menus, dialogs, toasts, table tools, inline edit
-  icons/         hali-icons.svg: 24px line icon sprite
+  icons/         hali-icons.svg: 24px line icons. hali-icons-16.svg: the 16px set
   assets/        the Hali mark
   site/          the generated reference site (open site/index.html)
   docs/          versioning, architecture and accessibility notes
@@ -123,6 +123,7 @@ Requires Python 3.8 or newer. There are no dependencies.
 
 ```sh
 python3 scripts/build_tokens.py   # tokens JSON, CSS and contrast report. Fails if any pairing misses.
+python3 scripts/build_icons16.py  # the 16px icon set, generated from the 24px sprite
 python3 scripts/build_site.py     # the reference site in site/
 python3 scripts/check_version.py  # version agrees everywhere
 ```

@@ -1,0 +1,142 @@
+#!/usr/bin/env python3
+"""Generate icons/hali-icons-16.svg, the 16px icon set, from the 24px sprite.
+
+Run from the repository root:
+
+    python3 scripts/build_icons16.py
+
+Each 16px symbol is the 24px drawing scaled by 2/3 with its coordinates snapped to the half pixel grid, so
+straight strokes land on pixel centers. It is meant to be drawn with a 1.5px stroke (.h-icon--16 does that).
+Symbols that need hand tuning go in OVERRIDES and win over the generated ones.
+
+No dependencies.
+"""
+
+import os
+import re
+import sys
+
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+VERSION = open(os.path.join(ROOT, "VERSION"), encoding="utf-8").read().strip()
+K = 2.0 / 3.0
+
+# The icons people use inside small controls, dense tables and text.
+SET = """search plus close check chevron-down chevron-up chevron-left chevron-right arrow-right arrow-left
+arrow-up-down menu more user users bell home info warning error success trash edit copy link external filter
+sliders calendar clock star eye lock download upload refresh help folder file inbox mail grid chart settings
+dollar tag play pause map-pin image heart message share send globe grip list""".split()
+
+# Hand tuned replacements, as inner markup on the 16 grid. Empty at 2.1.0: the generated set passed review.
+OVERRIDES = {}
+
+
+def snap(v, step=0.5):
+    return round(v * K / step) * step
+
+
+def fmt(v):
+    v = round(v, 2)
+    return ("%g" % v)
+
+
+def tokens(d):
+    return re.findall(r"[MmLlHhVvCcSsQqTtAaZz]|-?\d*\.?\d+(?:e-?\d+)?", d)
+
+
+def scale_path(d):
+    """Convert a path to absolute commands, scale by 2/3 and snap endpoints to the half pixel."""
+    t = tokens(d)
+    i = 0
+    cx = cy = sx = sy = 0.0
+    out = []
+    cmd = None
+    n = {"M": 2, "L": 2, "H": 1, "V": 1, "C": 6, "S": 4, "Q": 4, "T": 2, "A": 7, "Z": 0}
+    while i < len(t):
+        if re.fullmatch(r"[A-Za-z]", t[i]):
+            cmd = t[i]
+            i += 1
+            if cmd in "Zz":
+                out.append("Z")
+                cx, cy = sx, sy
+                continue
+        rel = cmd.islower()
+        c = cmd.upper()
+        args = [float(x) for x in t[i:i + n[c]]]
+        i += n[c]
+        ox, oy = (cx, cy) if rel else (0.0, 0.0)
+        if c == "M":
+            x, y = args[0] + ox, args[1] + oy
+            out.append("M%s %s" % (fmt(snap(x)), fmt(snap(y))))
+            cx, cy, sx, sy = x, y, x, y
+            cmd = "l" if rel else "L"
+        elif c == "L":
+            x, y = args[0] + ox, args[1] + oy
+            out.append("L%s %s" % (fmt(snap(x)), fmt(snap(y))))
+            cx, cy = x, y
+        elif c == "H":
+            x = args[0] + ox
+            out.append("H%s" % fmt(snap(x)))
+            cx = x
+        elif c == "V":
+            y = args[0] + oy
+            out.append("V%s" % fmt(snap(y)))
+            cy = y
+        elif c == "C":
+            a = [args[0] + ox, args[1] + oy, args[2] + ox, args[3] + oy, args[4] + ox, args[5] + oy]
+            out.append("C" + " ".join(fmt(v * K) for v in a[:4]) + " %s %s" % (fmt(snap(a[4])), fmt(snap(a[5]))))
+            cx, cy = a[4], a[5]
+        elif c in "SQ":
+            a = [args[0] + ox, args[1] + oy, args[2] + ox, args[3] + oy]
+            out.append(c + " ".join(fmt(v * K) for v in a[:2]) + " %s %s" % (fmt(snap(a[2])), fmt(snap(a[3]))))
+            cx, cy = a[2], a[3]
+        elif c == "T":
+            x, y = args[0] + ox, args[1] + oy
+            out.append("T%s %s" % (fmt(snap(x)), fmt(snap(y))))
+            cx, cy = x, y
+        elif c == "A":
+            rx, ry, rot, large, sweep = args[0], args[1], args[2], int(args[3]), int(args[4])
+            x, y = args[5] + ox, args[6] + oy
+            out.append("A%s %s %s %d %d %s %s" % (fmt(rx * K), fmt(ry * K), fmt(rot), large, sweep, fmt(snap(x)), fmt(snap(y))))
+            cx, cy = x, y
+    return "".join(out)
+
+
+def scale_attr(m, names, step=0.5):
+    def r(mo):
+        name, val = mo.group(1), float(mo.group(2))
+        if name in ("cx", "cy", "x", "y"):
+            v = snap(val, step)
+        elif name == "r":
+            v = round(val * K * 2) / 2 if val * K >= 1.5 else round(val * K, 2)
+        else:
+            v = round(val * K * 2) / 2
+        return '%s="%s"' % (name, fmt(v))
+    return re.sub(r'\b(%s)="(-?[\d.]+)"' % "|".join(names), r, m)
+
+
+def convert(inner):
+    inner = re.sub(r' d="([^"]+)"', lambda m: ' d="%s"' % scale_path(m.group(1)), inner)
+    inner = re.sub(r"<(circle|rect)\b[^>]*>", lambda m: scale_attr(m.group(0), ["cx", "cy", "r", "x", "y", "width", "height", "rx"]), inner)
+    return inner
+
+
+def main():
+    sprite = open(os.path.join(ROOT, "icons", "hali-icons.svg"), encoding="utf-8").read()
+    symbols = dict(re.findall(r'<symbol id="i-([^"]+)" viewBox="0 0 24 24">(.*?)</symbol>', sprite))
+    missing = [n for n in SET if n not in symbols]
+    if missing:
+        sys.exit("Not in the 24px sprite: " + ", ".join(missing))
+    lines = ['<svg xmlns="http://www.w3.org/2000/svg" style="display:none">',
+             "  <!-- Hali 16px icons v%s. Generated by scripts/build_icons16.py from the 24px sprite. Do not edit by hand. Draw with a 1.5px stroke: use .h-icon--16. -->" % VERSION]
+    for n in SET:
+        inner = OVERRIDES.get(n) or convert(symbols[n])
+        lines.append('  <symbol id="i16-%s" viewBox="0 0 16 16">%s</symbol>' % (n, inner))
+    lines.append("</svg>")
+    path = os.path.join(ROOT, "icons", "hali-icons-16.svg")
+    with open(path, "w", encoding="utf-8") as f:
+        f.write("\n".join(lines) + "\n")
+    print("Wrote icons/hali-icons-16.svg with %d icons" % len(SET))
+
+
+if __name__ == "__main__":
+    main()

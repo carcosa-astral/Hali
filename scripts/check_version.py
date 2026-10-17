@@ -35,6 +35,11 @@ def main():
         problems.append("tokens/hali-tokens.json version %s != VERSION %s (run build_tokens.py)"
                         % (tokens["$meta"].get("version"), version))
 
+    for sprite in ("icons/hali-icons.svg", "icons/hali-icons-16.svg"):
+        m = re.search(r"Hali (?:16px )?icons v(\d+\.\d+\.\d+)", read(sprite))
+        if not m or m.group(1) != version:
+            problems.append("%s header version %s != VERSION %s" % (sprite, m.group(1) if m else "missing", version))
+
     css = read("css/hali.css")
     m = re.search(r"Hali design language v(\S+)", css)
     if not m or m.group(1) != version:

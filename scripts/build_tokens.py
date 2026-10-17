@@ -27,7 +27,7 @@ from hali_color import BLACK, WHITE, contrast, ensure, mix, rgba, shift_l, softe
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT_DIR = os.path.join(ROOT, "tokens")
 
-VERSION = "2.0.0"
+VERSION = "2.1.0"
 
 # ---------------------------------------------------------------------------------------------
 # Stock Nord palette (https://www.nordtheme.com/docs/colors-and-palettes)

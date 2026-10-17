@@ -10,6 +10,29 @@ design language is spelled out in [docs/VERSIONING.md](docs/VERSIONING.md).
 
 Nothing yet.
 
+## [2.1.0] - 2026-10-17
+
+Icons. Hali gets 30 new icons with a ripple accent and a 16px set drawn for small controls. Nothing from
+2.0 changes.
+
+### Added
+
+- **30 new icons** in `icons/hali-icons.svg`, filling the gaps a real app hit: `dollar`, `wallet`,
+  `receipt`, `music`, `headphones`, `mic`, `volume`, `play`, `pause`, `users`, `user-plus`, `shield`,
+  `key`, `tag`, `bookmark`, `map-pin`, `globe`, `image`, `share`, `undo`, `redo`, `grip`, `list`,
+  `settings`, `heart`, `message`, `send`, `wifi`, `activity` and `trending-up`. The set is now 78 icons.
+- **Ripple accent.** Each new icon draws one detail as a ripple arc, ring or dot, echoing the Hali mark.
+  The detail uses `--hali-icon-accent`, which is the icon color by default, so every icon still works as
+  a single color icon. Add `h-icon--duo` to color the accent with `brand.text`. The 1.0 icons are single
+  color only.
+- **16px icon set.** `icons/hali-icons-16.svg` holds 57 of the most used icons on a 16 grid, with ids
+  `i16-<name>`. Use them with `h-icon--16` (1.5px stroke) in small controls, dense tables and text. The
+  file is generated from the 24px drawings by `scripts/build_icons16.py`, which snaps strokes to the half
+  pixel. Hand tuned replacements go in its `OVERRIDES`.
+- `./icons-16.svg` export in `package.json`, a CI step that rebuilds the 16px set, and a version check
+  for both sprites.
+- **Reference site.** The Iconography page shows all 78 icons, the ripple accent, and the 16px set.
+
 ## [2.0.0] - 2026-10-17
 
 The first release shaped by a real application. Designing the Deckhand club management app on Hali 1.0
@@ -103,6 +126,7 @@ First stable release. Hali is dark first: dark is the default theme, and light i
 - Inter and JetBrains Mono are named in the font stacks but are not bundled. Without them the system
   fonts are used.
 
-[Unreleased]: https://github.com/carcosa-astral/Hali/compare/v2.0.0...HEAD
+[Unreleased]: https://github.com/carcosa-astral/Hali/compare/v2.1.0...HEAD
+[2.1.0]: https://github.com/carcosa-astral/Hali/compare/v2.0.0...v2.1.0
 [2.0.0]: https://github.com/carcosa-astral/Hali/compare/v1.0.0...v2.0.0
 [1.0.0]: https://github.com/carcosa-astral/Hali/releases/tag/v1.0.0
