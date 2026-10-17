@@ -1,0 +1,46 @@
+{
+  "name": "@carcosa-astral/hali",
+  "version": "1.0.0",
+  "description": "Hali: a dark first, Nord based design language that blends Atlassian structure with Material 3 tonal surfaces.",
+  "private": true,
+  "keywords": [
+    "design-system",
+    "design-language",
+    "design-tokens",
+    "nord",
+    "css",
+    "dark-mode",
+    "accessibility"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/carcosa-astral/Hali.git"
+  },
+  "files": [
+    "css",
+    "js",
+    "tokens",
+    "icons",
+    "assets",
+    "docs",
+    "CHANGELOG.md",
+    "VERSION"
+  ],
+  "exports": {
+    "./css": "./css/hali.css",
+    "./js": "./js/hali.js",
+    "./tokens.css": "./tokens/hali-tokens.css",
+    "./tokens.json": "./tokens/hali-tokens.json",
+    "./icons.svg": "./icons/hali-icons.svg",
+    "./mark.svg": "./assets/hali-mark.svg"
+  },
+  "style": "css/hali.css",
+  "scripts": {
+    "build:tokens": "python3 scripts/build_tokens.py",
+    "build:site": "python3 scripts/build_site.py",
+    "build": "npm run build:tokens && npm run build:site",
+    "check:version": "python3 scripts/check_version.py",
+    "check": "npm run check:version && npm run build:tokens"
+  },
+  "license": "MIT"
+}

@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Version is consistent
+        run: python3 scripts/check_version.py
+
+      - name: Build tokens (fails on any contrast miss)
+        run: python3 scripts/build_tokens.py
+
+      - name: Build site
+        run: python3 scripts/build_site.py
+
+      - name: Generated files are committed
+        run: |
+          git diff --exit-code -- tokens site || {
+            echo "Generated files are out of date. Run the build scripts and commit the result."
+            exit 1
+          }
