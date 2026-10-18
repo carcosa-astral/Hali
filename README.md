@@ -145,6 +145,7 @@ optional `js/hali.js` supplies the keyboard behavior for tabs, menus and dialogs
 
 ## Project policy
 
+- Building with Hali (cheat sheet and patterns): [docs/BUILDING-WITH-HALI.md](docs/BUILDING-WITH-HALI.md)
 - Versioning: [docs/VERSIONING.md](docs/VERSIONING.md)
 - Architecture: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
 - Contributing: [CONTRIBUTING.md](CONTRIBUTING.md)

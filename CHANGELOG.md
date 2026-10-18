@@ -8,7 +8,9 @@ design language is spelled out in [docs/VERSIONING.md](docs/VERSIONING.md).
 
 ## [Unreleased]
 
-Nothing yet.
+### Added
+
+- `docs/BUILDING-WITH-HALI.md`: a working guide with setup, tokens, class cheat sheet, copy and paste patterns, icon use, voice rules and the list of known gaps.
 
 ## [2.1.0] - 2026-10-17
 
