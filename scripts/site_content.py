@@ -232,13 +232,15 @@ add(
   <legend>Visibility</legend>
   <label class="h-check"><input type="radio" name="vis" checked><span>Private to me</span></label>
   <label class="h-check"><input type="radio" name="vis"><span>Everyone in the workspace</span></label>
-  <label class="h-check"><input type="radio" name="vis" disabled><span>Public (requires an upgrade)</span></label>
+  <label class="h-check"><input type="radio" name="vis" disabled aria-describedby="vis-public-why"><span>Public</span></label>
+  <div class="h-help" id="vis-public-why">Public visibility needs a Team plan.</div>
 </fieldset>""", {}),
     ],
     use=["Write labels so they make sense when read alone.", "Use a fieldset and legend to group related options."],
     avoid=["Radios for a single yes or no. Use a checkbox or a switch."],
     a11y=["Wrap the input and text in one `label`, so the whole row is clickable.",
-          "Indeterminate is set from script: `input.indeterminate = true`."],
+          "Indeterminate is set from script: `input.indeterminate = true`.",
+          "Never put the reason an option is disabled inside its own label: disabled text is dimmed and exempt from contrast rules. Put it in `h-help` and link it with `aria-describedby`."],
 )
 
 add(

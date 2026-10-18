@@ -412,7 +412,7 @@ def color():
     acc = ""
     for name in ["teal", "cyan", "blue", "red", "orange", "yellow", "green", "purple"]:
         acc += ('<div class="doc-family"><div class="h-title-sm" style="text-transform:capitalize">%(n)s</div>'
-                '<div class="doc-family__chips"><span class="doc-chip-bold" style="background:var(--hali-accent-%(n)s-fill);color:var(--hali-surface-default)">fill</span>'
+                '<div class="doc-family__chips"><span class="doc-chip-key"><i style="background:var(--hali-accent-%(n)s-fill)"></i>fill</span>'
                 '<span class="doc-chip-container" style="background:var(--hali-accent-%(n)s-container);color:var(--hali-accent-%(n)s-text)">container</span>'
                 '<span style="color:var(--hali-accent-%(n)s-text);font:var(--hali-type-label-lg)">text</span></div></div>' % {"n": name})
     parts.append('<h3 class="doc-h3">Accents</h3><p class="doc-p">Eight accents for labels, avatars and chart marks. <strong>fill</strong> meets 3:1 for graphics, <strong>text</strong> meets 4.5:1, and <strong>container</strong> is the tonal background.</p><div class="h-grid" style="--h-col:200px">%s</div>' % acc)
@@ -654,7 +654,7 @@ def dataviz():
     svg.append("</svg>")
     legend = "".join('<li><i style="background:var(--hali-accent-%s-fill)"></i>%s</li>' % (name, label) for name, _, label in series)
     order = ["cyan", "orange", "purple", "yellow", "green", "red", "blue", "teal"]
-    sw = "".join('<span class="doc-chip-bold" style="background:var(--hali-accent-%s-fill);color:var(--hali-surface-default)">%d %s</span>' % (n, i + 1, n) for i, n in enumerate(order))
+    sw = "".join('<span class="doc-chip-key"><i style="background:var(--hali-accent-%s-fill)"></i>%d %s</span>' % (n, i + 1, n) for i, n in enumerate(order))
     body = ('<p class="doc-p">Use the eight accent <strong>fill</strong> colors in this order. Each meets 3:1 against the page, and neighbors in the sequence differ strongly in hue and lightness.</p>'
             '<div class="doc-family__chips h-mt-16">%s</div>'
             '<div class="doc-preview h-mt-24">%s<ul class="doc-legend">%s</ul></div>%s'

@@ -86,8 +86,9 @@ html { scroll-behavior: smooth; scroll-padding-top: 72px; }
 .doc-hero { padding: 24px 0 8px; }
 .doc-hero__title {
   margin: 16px 0 12px;
+  font-family: var(--hali-font-display);
   font-size: clamp(48px, 8vw, 80px);
-  font-weight: 600;
+  font-weight: 700;
   line-height: 1.02;
   letter-spacing: -0.035em;
 }
@@ -154,6 +155,20 @@ html { scroll-behavior: smooth; scroll-padding-top: 72px; }
   background: var(--hali-surface-raised);
 }
 .doc-family__chips { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+/* accent.fill is a 3:1 graphics color, so a label never sits on it: the swatch is a block and the
+   words sit on surface.strong, which is built for text. */
+.doc-chip-key {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 28px;
+  padding: 0 10px 0 8px;
+  border-radius: var(--hali-radius-sm);
+  background: var(--hali-surface-strong);
+  color: var(--hali-text-default);
+  font: var(--hali-type-label-md);
+}
+.doc-chip-key i { width: 14px; height: 14px; border-radius: 4px; flex: none; }
 .doc-chip-bold, .doc-chip-container {
   display: inline-flex;
   align-items: center;

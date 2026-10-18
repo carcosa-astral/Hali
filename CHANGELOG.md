@@ -59,6 +59,10 @@ unchanged. Shape, size, type and the default palette are not, which is why this 
 - Shadows are softer and larger. Light theme shadows are tinted with the palette's own deep color.
 - Contrast checking now covers every palette in dark and light: 930 checks, all passing.
 - Voice guidance allows a light touch in safe moments (success, empty states, first run).
+- Reference site: the Hali wordmark uses the display font, accent `fill` swatches are shown as color
+  blocks with their label on `surface.strong` (a 3:1 graphics color never carries text), and the disabled
+  radio demo moves its reason into `h-help` instead of the dimmed label. Every rendered text element on the
+  site was measured in all five palettes in dark and light.
 
 ## [2.1.0] - 2026-10-17
 
