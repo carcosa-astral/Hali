@@ -1,13 +1,13 @@
 {
   "name": "@carcosa-astral/hali",
-  "version": "2.1.0",
-  "description": "Hali: a dark first, Nord based design language that blends Atlassian structure with Material 3 tonal surfaces.",
+  "version": "3.0.0",
+  "description": "Hali: a dark first design language for web applications. Soft where you touch, crisp where you read.",
   "private": true,
   "keywords": [
     "design-system",
     "design-language",
     "design-tokens",
-    "nord",
+    "palettes",
     "css",
     "dark-mode",
     "accessibility"

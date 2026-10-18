@@ -2,7 +2,7 @@
 
 A working guide for anyone, or any AI assistant, building a web app on Hali. It is written to be read once and then used as a cheat sheet.
 
-- Version this guide matches: **2.1.0**
+- Version this guide matches: **3.0.0**
 - Source: https://github.com/carcosa-astral/Hali
 - Full reference with live demos: open `site/index.html`
 
@@ -44,8 +44,19 @@ Load the tokens first. `js/hali.js` is optional. Without it the markup still ren
 | Dark (default) | nothing, or `data-theme="dark"` |
 | Light | `data-theme="light"` |
 | Increased contrast | `data-contrast="more"` |
+| A palette | `data-palette="aurora"`, `"ember"`, `"midnight"` or `"nord"`. Polar is the default and needs nothing. |
 
-With no `data-theme`, Hali follows the system setting. Save the person's choice and set the attribute before the page paints so it does not flash.
+With no `data-theme`, Hali follows the system setting. Palettes: Polar (default), Aurora (violet), Ember (wine and rose, with a sunrise light theme), Midnight (near black) and Nord (stock). Every palette has dark and light. With `js/hali.js` loaded, `Hali.setPalette('ember')` and `Hali.setTheme('light')` remember the choice, and `Hali.restore()` in a tiny inline script in `<head>` applies it before the page paints so it does not flash.
+
+Fonts are not bundled. Add this to `<head>` to load them from Google Fonts:
+
+```html
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+```
+
+Without them Hali falls back to system fonts and everything still works.
 
 ## Tokens
 
@@ -62,16 +73,18 @@ All tokens are `--hali-<group>-<role>`. Every color token changes with the theme
 | Accent | `accent-<teal, cyan, blue, red, orange, yellow, green, purple>` with `-container`, `-fill`, `-text` | Avatars, chips, chart series |
 | State | `state-hover`, `state-pressed`, `state-scrim` | Hover and pressed layers, dialog backdrop |
 | Shadow | `shadow-raised`, `-overlay`, `-modal` | Only things that float |
+| Glow | `glow-brand`, `glow-soft` | The halo behind a hero, the focus glow, the "now" bar. Never behind text |
 
 Static tokens (the same in every theme):
 
 | Group | Tokens |
 | --- | --- |
 | Space | `space-2`, `4`, `6`, `8`, `12`, `16`, `20`, `24`, `32`, `40`, `48`, `64`, `80` |
-| Radius | `radius-xs` 4, `sm` 6, `md` 8, `lg` 12, `xl` 16, `2xl` 28, `full` |
-| Size | `size-control-sm` 28, `-md` 36, `-lg` 44, `size-icon-sm` 16, `-md` 20, `-lg` 24, `size-row-compact` 32, `-default` 44, `-comfortable` 56 |
-| Type | `type-display`, `type-headline-lg/md/sm`, `type-title-lg/md/sm`, `type-body-lg/md/sm`, `type-label-lg/md/sm`, `type-code-md` |
-| Motion | `duration-fast` 100ms, `-base` 200ms, `-slow` 300ms, `-deliberate` 500ms; `ease-standard`, `ease-enter`, `ease-exit` |
+| Radius | `radius-xs` 4, `sm` 6, `md` 8, `lg` 12, `xl` 18, `2xl` 28, `3xl` 32, `full` |
+| Shape roles | `shape-control` (pill), `shape-field` (18), `shape-card` (28), `shape-hero` (32), `shape-data` (8). Use the role, not the number. |
+| Size | `size-control-sm` 32, `-md` 40, `-lg` 48, `size-icon-sm` 16, `-md` 20, `-lg` 24, `size-row-compact` 32, `-default` 44, `-comfortable` 56 |
+| Type | `type-hero`, `type-display`, `type-headline-lg/md/sm`, `type-title-lg/md/sm`, `type-body-lg/md/sm`, `type-label-lg/md/sm`, `type-code-md` |
+| Motion | Productive (work): `duration-productive` 160ms with `ease-productive`. Expressive (wins, arrivals): `duration-expressive` 480ms with `ease-spring`. Also `duration-micro` 70ms, `-fast` 100ms, `-base` 200ms, `-slow` 300ms, `-deliberate` 500ms; `ease-standard`, `-enter`, `-exit` |
 | Layers | `z-sticky`, `z-dropdown`, `z-overlay`, `z-modal`, `z-toast`, `z-tooltip` |
 
 Breakpoints are Material window classes: compact under 600px, medium 600, expanded 840, large 1200, extra large 1600. Below 840px the side navigation hides and your app swaps it for a menu button and a sheet.
@@ -113,10 +126,10 @@ Block names and their main parts. Every block has a demo, markup and guidance on
 | Group | Blocks |
 | --- | --- |
 | Actions | `h-button` (`--bold`, `--tonal`, `--outline`, `--subtle`, `--link`, `--danger`, `--danger-tonal`, `--sm`, `--lg`, `--icon`, `--block`), `h-button-group` |
-| Forms | `h-field`, `h-label`, `h-help`, `h-error`, `h-input` (`--sm`, `--lg`), `h-textarea`, `h-select`, `h-input-group`, `h-fieldset`, `h-check`, `h-switch`, `h-segmented`, `h-chip`, `h-inline-edit` |
-| Display | `h-lozenge` (`--bold`, `--outline`), `h-badge`, `h-dot`, `h-avatar` (`--sm`, `--lg`, `--xl`), `h-avatar-group`, `h-card` (`--elevated`, `--outlined`, `--interactive`), `h-accordion`, `h-divider`, `h-kbd`, `h-code`, `h-codeblock` |
+| Forms | `h-field`, `h-label`, `h-help`, `h-error`, `h-input` (`--sm`, `--lg`), `h-textarea`, `h-select`, `h-input-group`, `h-fieldset`, `h-check`, `h-switch`, `h-segmented`, `h-search` (`__input`), `h-chip`, `h-inline-edit` |
+| Display | `h-lozenge` (`--bold`, `--outline`, `--live`), `h-badge`, `h-dot`, `h-avatar` (`--sm`, `--lg`, `--xl`), `h-avatar-group`, `h-card` (`--elevated`, `--outlined`, `--interactive`; no border by default), `h-hero` (`__title`, `__lead`, `__aside`, `__actions`), `h-stat` (`__label`, `__value`, `__foot`), `h-bars` (`__col`, `__bar`, `__bar--now`, `__label`, `__value`), `h-halo`, `h-accordion`, `h-divider`, `h-kbd`, `h-code`, `h-codeblock` |
 | Feedback | `h-alert`, `h-banner`, `h-toast`, `h-progress`, `h-spinner`, `h-skeleton`, `h-empty` (`--compact`) |
-| Navigation | `h-topbar`, `h-sidenav` (`--rail`), `h-tabs`, `h-breadcrumbs`, `h-pagination` |
+| Navigation | `h-topbar`, `h-sidenav` (`--rail`, `--float`), `h-appshell--float`, `h-tabs`, `h-breadcrumbs`, `h-pagination` |
 | Overlays | `h-menu`, `h-dropdown`, `h-dialog` (`--sm`, `--lg`), `h-sheet` |
 | Data | `h-table` (`--compact`, `--comfortable`, `--sticky`), `h-table-wrap`, `h-toolbar`, `h-batchbar` |
 | Page | `h-appshell`, `h-page`, `h-page-header`, `h-section` |
@@ -287,7 +300,7 @@ To see every name, open the Iconography page on the reference site.
 
 ## Voice
 
-Clear, calm, direct, human. No exclamation marks, no urgency theater, no jokes at the expense of a real problem.
+Clear, calm, direct, human, with a little warmth. No exclamation marks, no urgency theater, no jokes at the expense of a real problem. A light touch is welcome in safe moments: a success, an empty state, a first run.
 
 | Situation | Write |
 | --- | --- |
@@ -303,8 +316,8 @@ A product can layer its own brand voice over this for marketing pages. Inside th
 
 If a screen needs one of these, build it from the existing blocks and tell the Hali maintainer so it can be added properly.
 
-- Date picker, combobox, tree view, stepper and charts (planned after 2.x)
-- KPI stat tile, simple bar chart, month calendar grid
+- Date picker, combobox, tree view, stepper and more charts (planned after 3.x)
+- Month calendar grid
 - Page intro and inline field help as a documented pattern
 - Ticket list with a reply thread, notification list, "viewing as" banner
 - Knowledge base article layout, status board
@@ -313,6 +326,6 @@ The up to date list lives in the BACCHUS project file `hali-additions-log.md`.
 
 ## Keeping up with releases
 
-Hali uses semantic versioning. A major version (2.0.0) means something you use was renamed or removed, and the changelog says what to change. A minor version (2.1.0) only adds. Read `CHANGELOG.md` before upgrading, and `docs/MIGRATING-2.0.md` if you are coming from 1.x.
+Hali uses semantic versioning. A major version (3.0.0) means something you use was renamed, removed or reshaped, and the changelog says what to change. A minor version (3.1.0) only adds. Read `CHANGELOG.md` before upgrading, and `docs/MIGRATING-3.0.md` if you are coming from 2.x.
 
-The current release is 2.1.0.
+The current release is 3.0.0.

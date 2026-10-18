@@ -26,7 +26,7 @@ Every pairing is checked at build time. Run `python3 scripts/build_tokens.py` an
 
 - **Never convey meaning by color alone.** Status needs an icon or a word as well. Links inside
   running text keep their underline.
-- **Do not put raw Nord colors on text.** Use semantic tokens. Raw Nord is for art.
+- **Do not put raw palette colors on text.** Use semantic tokens. The raw palette is for art.
 - **Do not use `text.disabled` for anything someone needs to read.** It is exempt from contrast rules and
   intentionally quiet. Say why something is disabled in nearby help text.
 - **Label every control.** A visible `h-label` linked with `for`/`id`, or `aria-label` for icon only

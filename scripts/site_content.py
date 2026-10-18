@@ -101,7 +101,7 @@ add(
         ("In text", """
 <p class="h-body-lg" style="max-width:56ch">Read the <a href="#link">accessibility guide</a> before shipping a new component, or see how
 <a href="#link">versioning</a> works. External links get an icon:
-<a href="#link">Nord palette %s</a>.</p>""" % I("external", "h-icon--sm"), {}),
+<a href="#link">Carbon color guidance %s</a>.</p>""" % I("external", "h-icon--sm"), {}),
         ("Subtle and standalone", """
 <div class="h-cluster h-gap-16">
   <a class="h-button h-button--link" href="#link">View all projects %s</a>
@@ -905,7 +905,7 @@ add(
 <div style="max-width:560px">
   <details class="h-accordion" open>
     <summary>What is Hali?</summary>
-    <div class="h-accordion__body">A dark first design language built on Nord, with Atlassian structure and Material 3 tonal surfaces.</div>
+    <div class="h-accordion__body">A dark first design language: soft where you touch, crisp where you read.</div>
   </details>
   <details class="h-accordion">
     <summary>Does it support light mode?</summary>
@@ -950,6 +950,100 @@ add(
 
 PATTERNS = []
 
+
+add(
+    id="hero", title="Hero", group="Display",
+    blurb="The one big moment on a screen. A headline, a lead, and an aside for the time or status that matters. Use one per screen, at the top.",
+    demos=[
+        ("Tonight", """
+<section class="h-hero" aria-label="Tonight">
+  <div>
+    <span class="h-lozenge h-lozenge--live h-is-brand hero-eyebrow"><span class="h-dot"></span>Doors open soon</span>
+    <h2 class="h-hero__title h-mt-12">Tonight at Vesper</h2>
+    <p class="h-hero__lead">Saturday, 9 pm SLT. Three sets, one room, and a floor that is already warming up.</p>
+  </div>
+  <div class="h-hero__aside">
+    <div class="h-hero__actions">
+      <button class="h-button h-button--bold h-button--lg">Open the doors</button>
+      <button class="h-button h-button--tonal h-button--lg">Edit lineup</button>
+    </div>
+  </div>
+</section>""", {"bg": "sunken", "layout": "plain"}),
+    ],
+    use=["One per screen, at the top, for the thing the person came to do or see.",
+         "Pair a headline with at most two actions: one bold, one tonal."],
+    avoid=["Do not stack two heroes or use one as a repeating card.",
+           "Do not put dense data, tables or forms inside a hero."],
+    a11y=["The ripple rings are decoration and carry no meaning.",
+          "Text in the hero is checked against the raised surface the gradient starts from. Keep body text at text.default."],
+)
+
+add(
+    id="stat", title="Stat tile", group="Display",
+    blurb="A label, a big number, and a footer for a trend lozenge. Tiles lift a few pixels with a small spring on hover.",
+    demos=[
+        ("Three tiles", """
+<div class="h-grid" style="--h-col:220px">
+  <div class="h-stat"><div class="h-stat__label">Tips this week</div><div class="h-stat__value">L$ 41,280</div><div class="h-stat__foot"><span class="h-lozenge h-is-success"><span class="h-dot"></span>12% up</span></div></div>
+  <div class="h-stat"><div class="h-stat__label">Guests in the room</div><div class="h-stat__value">0</div><div class="h-stat__foot"><span class="h-lozenge h-is-warning"><span class="h-dot"></span>Opens at 9 pm</span></div></div>
+  <div class="h-stat"><div class="h-stat__label">Staff checked in</div><div class="h-stat__value">4 of 6</div><div class="h-stat__foot"><span class="h-lozenge h-is-warning"><span class="h-dot"></span>2 to confirm</span></div></div>
+</div>""", {"bg": "sunken"}),
+    ],
+    use=["Three to four across the top of a dashboard.", "Always pair a trend with a word, not only a color."],
+    avoid=["Do not put more than one number in a tile."],
+    a11y=["The tile is not interactive. If it links somewhere, make the whole tile an `a` with a clear name."],
+)
+
+add(
+    id="bars", title="Bar chart", group="Data",
+    blurb="A single series bar chart with direct labels. Set --h-value from 0 to 100 on each bar. Highlight one bar with --now.",
+    demos=[
+        ("Tips by night", """
+<ul class="h-bars" aria-label="Tips by night, last seven nights" style="max-width:520px">
+  <li class="h-bars__col"><div class="h-bars__bar" style="--h-value:46"></div><span class="h-bars__label">Sun</span></li>
+  <li class="h-bars__col"><div class="h-bars__bar" style="--h-value:62"></div><span class="h-bars__label">Mon</span></li>
+  <li class="h-bars__col"><div class="h-bars__bar" style="--h-value:38"></div><span class="h-bars__label">Tue</span></li>
+  <li class="h-bars__col"><div class="h-bars__bar" style="--h-value:71"></div><span class="h-bars__label">Wed</span></li>
+  <li class="h-bars__col"><div class="h-bars__bar" style="--h-value:55"></div><span class="h-bars__label">Thu</span></li>
+  <li class="h-bars__col"><div class="h-bars__bar" style="--h-value:84"></div><span class="h-bars__label">Fri</span></li>
+  <li class="h-bars__col"><span class="h-bars__value">Best</span><div class="h-bars__bar h-bars__bar--now" style="--h-value:100"></div><span class="h-bars__label">Sat</span></li>
+</ul>""", {"bg": "raised"}),
+    ],
+    use=["One series, up to about twelve bars.", "Label the bar that matters, and give the exact numbers in a table nearby."],
+    avoid=["Do not use color alone to carry meaning. The highlighted bar also gets a text label."],
+    a11y=["Give the list an accessible name and put the same numbers in a table or in text for people who cannot see the chart."],
+)
+
+add(
+    id="search", title="Search pill", group="Forms",
+    blurb="A pill shaped search with a leading icon and an optional keyboard hint. It glows softly when focused.",
+    demos=[
+        ("Default", """
+<label class="h-search" style="max-width:420px">%s<input class="h-search__input" type="search" placeholder="Search or jump to" aria-label="Search"><kbd class="h-kbd">Ctrl K</kbd></label>""" % I("search"), {}),
+    ],
+    use=["The main search in a top bar or above a list."],
+    avoid=["Do not use it as a form field inside a dialog. Use h-input there."],
+    a11y=["Always give the input an aria-label if there is no visible label."],
+)
+
+add(
+    id="float-nav", title="Floating navigation", group="Navigation",
+    blurb="A rounded side panel that floats over a sunken, softly glowing stage. The current page gets a tinted pill and a glowing dot. Use it with h-appshell--float.",
+    demos=[
+        ("Floating panel", """
+<div class="h-halo" style="background-color:var(--hali-surface-sunken);padding:16px;border-radius:28px">
+  <nav class="h-sidenav h-sidenav--float" style="margin:0" aria-label="Main">
+    <a class="h-sidenav__item" href="#" aria-current="page">%s Tonight</a>
+    <a class="h-sidenav__item" href="#">%s Events</a>
+    <a class="h-sidenav__item" href="#">%s Staff</a>
+    <a class="h-sidenav__item" href="#">%s Settings</a>
+  </nav>
+</div>""" % (I("home"), I("calendar"), I("users"), I("settings")), {"layout": "plain"}),
+    ],
+    use=["The default shell for new apps. The classic top bar and side navigation still work."],
+    avoid=["Do not combine a floating panel with a full width top bar."],
+    a11y=["Same rules as the side navigation: label it, and mark the current page with aria-current."],
+)
 
 def pattern(**kw):
     kw.setdefault("notes", [])
@@ -1131,7 +1225,7 @@ pattern(
 
 VOICE_PRINCIPLES = [
     ("Clear", "Say the thing. One idea per sentence, plain words, no jargon the reader has not used themselves."),
-    ("Calm", "Hali is quiet by design. No exclamation marks, no urgency theater, no jokes at the expense of a real problem."),
+    ("Calm and warm", "Hali is quiet by design, with a little warmth. No exclamation marks, no urgency theater, no jokes at the expense of a real problem. A light touch is welcome in safe moments: a success, an empty state, a first run."),
     ("Direct", "Lead with what the person needs to know or do. Put the reason second."),
     ("Human", "Write the way a capable colleague would talk. Use 'you' and 'we' sparingly and 'please' almost never."),
 ]
@@ -1172,5 +1266,6 @@ STATUS_TABLE = [
     ("Table with toolbar, sorting and selection styles", "Stable", "1.0.0"),
     ("Table search, selection, bulk action bar and row density", "Stable", "2.0.0"),
     ("Inline edit, lozenge dot and outline, compact empty state", "Stable", "2.0.0"),
-    ("Date picker, combobox, tree view, stepper, charts", "Planned", "after 1.0"),
+    ("Hero, stat tile, bar chart, search pill, floating navigation, halo", "Stable", "3.0.0"),
+    ("Date picker, combobox, tree view, stepper, more charts", "Planned", "after 3.0"),
 ]

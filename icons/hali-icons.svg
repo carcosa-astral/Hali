@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
-  <!-- Hali icons v2.1.0. 24px grid, 1.75px stroke, round caps and joins. Style them with the .h-icon class. -->
+  <!-- Hali icons v3.0.0. 24px grid, 1.75px stroke, round caps and joins. Style them with the .h-icon class. -->
   <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
   <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
   <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>

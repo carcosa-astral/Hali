@@ -8,9 +8,57 @@ design language is spelled out in [docs/VERSIONING.md](docs/VERSIONING.md).
 
 ## [Unreleased]
 
+## [3.0.0] - 2026-10-18
+
+Hali stops looking like an enterprise console. Version 3 is soft where you touch and crisp where you read:
+pill controls, borderless cards that get their depth from tone, a halo of brand light, deeper surfaces, and
+two kinds of motion. It borrows structure from Atlassian, depth and state from Material 3, and layering,
+contrast discipline and productive and expressive motion from IBM Carbon. Roles, class names and icons are
+unchanged. Shape, size, type and the default palette are not, which is why this is a major release. See
+[docs/MIGRATING-3.0.md](docs/MIGRATING-3.0.md).
+
+### Breaking
+
+- **Default palette is Polar, not Nord.** Roles and contrast guarantees hold. `data-palette="nord"` restores
+  the 2.x palette.
+- **`--hali-nord-*` is deprecated** and fixed to stock Nord. Use `--hali-palette-*`, which follows the active
+  palette. In `tokens/hali-tokens.json` the `nord.*` keys inside themes are now `palette.*`.
+- **Control heights grew:** `size-control-sm` 28 to 32, `-md` 36 to 40, `-lg` 44 to 48.
+- **Shape:** buttons, chips, lozenges, segmented controls and navigation items are pills. Fields, alerts,
+  toasts and menus are 18px. Cards, dialogs and table wrappers are 28px. Radius `xl` is 18.
+- **Cards, dialogs, menus, toasts and table wrappers lost their border.** Use `h-card--outlined` for a line.
+  `h-card` padding is 24 (was 16).
+- **Type:** Inter and JetBrains Mono become IBM Plex Sans and IBM Plex Mono. Display and headlines move to
+  Bricolage Grotesque at weight 700. `display` is 44/48 (was 40/48), `headline-lg` is 34/40 (was 32/40).
+- **Segmented control:** the selected segment is a solid brand fill.
+- **Toast:** no colored left bar.
+
 ### Added
 
-- `docs/BUILDING-WITH-HALI.md`: a working guide with setup, tokens, class cheat sheet, copy and paste patterns, icon use, voice rules and the list of known gaps.
+- **Five palettes:** Polar (default), Aurora, Ember (its light theme is the sunrise one), Midnight (near
+  black) and Nord (stock, opt in). Each has dark, light and increased contrast. Choose with `data-palette`.
+- **`Hali.setPalette()`, `Hali.setTheme()` and `Hali.restore()`** in `js/hali.js`, with the choice remembered
+  in the browser.
+- **Shape roles:** `shape-control`, `shape-field`, `shape-card`, `shape-hero`, `shape-data`, and radius `3xl`.
+- **Two kinds of motion.** Productive: `duration-productive` 160ms with `ease-productive` (from IBM Carbon's
+  productive curve), for work. Expressive: `duration-expressive` 480ms with `ease-spring`, for wins and
+  arrivals. Also `duration-micro` 70ms, `ease-productive-enter`, `ease-productive-exit`, `ease-expressive`.
+- **Glow tokens:** `glow.brand` and `glow.soft`.
+- **`type-hero`** (56/58) and `--hali-font-display`.
+- **New components:** `h-hero` (with a ripple ring motif), `h-stat`, `h-bars`, `h-search`, `h-halo`,
+  `h-sidenav--float` with `h-appshell--float`, and `h-lozenge--live`.
+- `docs/BUILDING-WITH-HALI.md`: a working guide with setup, tokens, class cheat sheet, copy and paste patterns,
+  icon use, voice rules and the list of known gaps.
+- `docs/MIGRATING-3.0.md`.
+- **Reference site:** a palette picker, a palette gallery, and pages for the new components.
+
+### Changed
+
+- Buttons lift 1px on hover and press to 97%. Bold buttons carry a soft brand glow. Fields show a glow ring
+  on focus. Switch thumbs move with a small spring.
+- Shadows are softer and larger. Light theme shadows are tinted with the palette's own deep color.
+- Contrast checking now covers every palette in dark and light: 930 checks, all passing.
+- Voice guidance allows a light touch in safe moments (success, empty states, first run).
 
 ## [2.1.0] - 2026-10-17
 
@@ -128,7 +176,8 @@ First stable release. Hali is dark first: dark is the default theme, and light i
 - Inter and JetBrains Mono are named in the font stacks but are not bundled. Without them the system
   fonts are used.
 
-[Unreleased]: https://github.com/carcosa-astral/Hali/compare/v2.1.0...HEAD
+[Unreleased]: https://github.com/carcosa-astral/Hali/compare/v3.0.0...HEAD
+[3.0.0]: https://github.com/carcosa-astral/Hali/compare/v2.1.0...v3.0.0
 [2.1.0]: https://github.com/carcosa-astral/Hali/compare/v2.0.0...v2.1.0
 [2.0.0]: https://github.com/carcosa-astral/Hali/compare/v1.0.0...v2.0.0
 [1.0.0]: https://github.com/carcosa-astral/Hali/releases/tag/v1.0.0

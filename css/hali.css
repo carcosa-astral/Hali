@@ -1,7 +1,7 @@
 /*!
- * Hali design language v2.1.0
+ * Hali design language v3.0.0
  * Components and utilities. Requires tokens/hali-tokens.css to be loaded first.
- * Dark first. Class prefix: h-   Custom property prefix: --hali-
+ * Dark first. Soft where you touch, crisp where you read. Class prefix: h-   Custom property prefix: --hali-
  */
 
 @layer hali.base, hali.layout, hali.components, hali.utilities;
@@ -189,6 +189,7 @@
    Typography
    =========================================================================================== */
 @layer hali.components {
+  .h-type-hero { font: var(--hali-type-hero); letter-spacing: var(--hali-tracking-hero); }
   .h-display { font: var(--hali-type-display); letter-spacing: var(--hali-tracking-display); }
   .h-headline-lg { font: var(--hali-type-headline-lg); letter-spacing: var(--hali-tracking-headline-lg); }
   .h-headline-md { font: var(--hali-type-headline-md); letter-spacing: var(--hali-tracking-headline-md); }
@@ -331,9 +332,9 @@
     justify-content: center;
     gap: var(--hali-space-8);
     min-height: var(--hali-size-control-md);
-    padding: 0 var(--hali-space-16);
+    padding: 0 var(--hali-space-20);
     border: 1px solid var(--_bd);
-    border-radius: var(--hali-radius-md);
+    border-radius: var(--hali-shape-control);
     background: var(--_bg);
     color: var(--_fg);
     font: var(--hali-type-label-lg);
@@ -344,9 +345,13 @@
     user-select: none;
     -webkit-tap-highlight-color: transparent;
     transition:
-      background-color var(--hali-duration-fast) var(--hali-ease-standard),
-      border-color var(--hali-duration-fast) var(--hali-ease-standard);
+      background-color var(--hali-duration-productive) var(--hali-ease-productive),
+      border-color var(--hali-duration-productive) var(--hali-ease-productive),
+      box-shadow var(--hali-duration-productive) var(--hali-ease-productive),
+      transform var(--hali-duration-expressive) var(--hali-ease-spring);
   }
+  .h-button:not(:disabled):not([aria-disabled="true"]):hover { transform: translateY(-1px); }
+  .h-button:not(:disabled):not([aria-disabled="true"]):active { transform: scale(0.97); }
   /* Material style state layer: the label color at low opacity */
   .h-button::before {
     content: "";
@@ -366,6 +371,7 @@
   .h-button--bold:hover { --_bg: var(--hali-brand-bold-hover); }
   .h-button--bold:active { --_bg: var(--hali-brand-bold-pressed); }
   .h-button--bold::before { display: none; }
+  .h-button--bold:not(:disabled) { box-shadow: 0 8px 24px -8px var(--hali-glow-brand); }
 
   .h-button--tonal { --_bg: var(--hali-brand-container); --_fg: var(--hali-brand-on-container); }
   .h-button--outline { --_bg: transparent; --_bd: var(--hali-border-strong); }
@@ -427,13 +433,13 @@
   .h-button-group { display: inline-flex; }
   .h-button-group > .h-button { border-radius: 0; margin-inline-start: -1px; }
   .h-button-group > .h-button:first-child {
-    border-start-start-radius: var(--hali-radius-md);
-    border-end-start-radius: var(--hali-radius-md);
+    border-start-start-radius: var(--hali-shape-control);
+    border-end-start-radius: var(--hali-shape-control);
     margin-inline-start: 0;
   }
   .h-button-group > .h-button:last-child {
-    border-start-end-radius: var(--hali-radius-md);
-    border-end-end-radius: var(--hali-radius-md);
+    border-start-end-radius: var(--hali-shape-control);
+    border-end-end-radius: var(--hali-shape-control);
   }
 
   /* ---- Form fields ------------------------------------------------------------------------- */
@@ -471,13 +477,15 @@
   .h-select select {
     width: 100%;
     min-height: var(--hali-size-control-md);
-    padding: 0 var(--hali-space-12);
+    padding: 0 var(--hali-space-16);
     border: 1px solid var(--hali-border-strong);
-    border-radius: var(--hali-radius-md);
+    border-radius: var(--hali-shape-field);
     background: var(--hali-surface-sunken);
     color: var(--hali-text-default);
     font: var(--hali-type-body-md);
-    transition: border-color var(--hali-duration-fast) var(--hali-ease-standard);
+    transition:
+      border-color var(--hali-duration-productive) var(--hali-ease-productive),
+      box-shadow var(--hali-duration-productive) var(--hali-ease-productive);
   }
   .h-input::placeholder,
   .h-textarea::placeholder { color: var(--hali-text-subtlest); opacity: 1; }
@@ -490,6 +498,7 @@
     border-color: var(--hali-border-focus);
     outline: var(--hali-focus-width) solid var(--hali-border-focus);
     outline-offset: 0;
+    box-shadow: 0 0 0 6px var(--hali-glow-soft);
   }
   .h-input[aria-invalid="true"],
   .h-textarea[aria-invalid="true"],
@@ -630,10 +639,10 @@
     background: var(--hali-text-subtle);
     transform: translateY(-50%);
     transition:
-      left var(--hali-duration-base) var(--hali-ease-standard),
-      width var(--hali-duration-base) var(--hali-ease-standard),
-      height var(--hali-duration-base) var(--hali-ease-standard),
-      background-color var(--hali-duration-base) var(--hali-ease-standard);
+      left var(--hali-duration-expressive) var(--hali-ease-spring),
+      width var(--hali-duration-expressive) var(--hali-ease-spring),
+      height var(--hali-duration-expressive) var(--hali-ease-spring),
+      background-color var(--hali-duration-productive) var(--hali-ease-productive);
   }
   .h-switch input:checked { background: var(--hali-brand-bold); border-color: var(--hali-brand-bold); }
   .h-switch input:checked::before {
@@ -650,9 +659,11 @@
   /* Segmented control */
   .h-segmented {
     display: inline-flex;
-    border: 1px solid var(--hali-border-strong);
-    border-radius: var(--hali-radius-md);
-    overflow: hidden;
+    gap: var(--hali-space-2);
+    padding: var(--hali-space-4);
+    border: 1px solid var(--hali-border-default);
+    border-radius: var(--hali-shape-control);
+    background: var(--hali-surface-sunken);
   }
   .h-segmented > button {
     display: inline-flex;
@@ -661,18 +672,17 @@
     min-height: 34px;
     padding: 0 var(--hali-space-16);
     border: 0;
-    border-inline-start: 1px solid var(--hali-border-strong);
+    border-radius: var(--hali-shape-control);
     background: transparent;
     color: var(--hali-text-default);
     font: var(--hali-type-label-lg);
     cursor: pointer;
     transition: background-color var(--hali-duration-fast) var(--hali-ease-standard);
   }
-  .h-segmented > button:first-child { border-inline-start: 0; }
   .h-segmented > button:hover { background: var(--hali-state-hover); }
   .h-segmented > button[aria-pressed="true"] {
-    background: var(--hali-brand-container);
-    color: var(--hali-brand-on-container);
+    background: var(--hali-brand-bold);
+    color: var(--hali-brand-on-bold);
   }
   .h-segmented > button:focus-visible { outline-offset: -2px; }
 
@@ -684,7 +694,7 @@
     min-height: 32px;
     padding: 0 var(--hali-space-12);
     border: 1px solid var(--hali-border-strong);
-    border-radius: var(--hali-radius-md);
+    border-radius: var(--hali-shape-control);
     background: transparent;
     color: var(--hali-text-default);
     font: var(--hali-type-label-lg);
@@ -718,9 +728,9 @@
     display: inline-flex;
     align-items: center;
     gap: var(--hali-space-4);
-    height: 22px;
-    padding: 0 var(--hali-space-8);
-    border-radius: var(--hali-radius-sm);
+    height: 24px;
+    padding: 0 var(--hali-space-12);
+    border-radius: var(--hali-radius-full);
     background: var(--h-container, var(--hali-surface-strong));
     color: var(--h-text, var(--hali-text-default));
     font: var(--hali-type-label-md);
@@ -734,6 +744,12 @@
     box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--h-text, var(--hali-text-default)) 45%, transparent);
   }
   .h-lozenge .h-dot { width: 6px; height: 6px; background: currentColor; }
+  /* A live dot pulses once every couple of seconds. Reduced motion turns the duration to 0. */
+  .h-lozenge--live .h-dot { animation: h-pulse 1800ms var(--hali-ease-expressive) infinite; }
+  @keyframes h-pulse {
+    0% { box-shadow: 0 0 0 0 color-mix(in srgb, currentColor 60%, transparent); }
+    70%, 100% { box-shadow: 0 0 0 8px transparent; }
+  }
 
   .h-badge {
     display: inline-grid;
@@ -781,26 +797,26 @@
 
   /* ---- Card -------------------------------------------------------------------------------- */
   .h-card {
-    padding: var(--hali-space-16);
-    border: 1px solid var(--hali-border-default);
-    border-radius: var(--hali-radius-lg);
+    padding: var(--hali-space-24);
+    border: 0;
+    border-radius: var(--hali-shape-card);
     background: var(--hali-surface-raised);
     color: var(--hali-text-default);
   }
-  .h-card--elevated { border-color: transparent; box-shadow: var(--hali-shadow-raised); }
-  .h-card--outlined { background: transparent; }
+  .h-card--elevated { box-shadow: var(--hali-shadow-raised); }
+  .h-card--outlined { background: transparent; border: 1px solid var(--hali-border-default); }
   .h-card--padded { padding: var(--hali-space-24); }
   .h-card--interactive {
     cursor: pointer;
     text-decoration: none;
     display: block;
     transition:
-      background-color var(--hali-duration-fast) var(--hali-ease-standard),
-      border-color var(--hali-duration-fast) var(--hali-ease-standard);
+      background-color var(--hali-duration-productive) var(--hali-ease-productive),
+      transform var(--hali-duration-expressive) var(--hali-ease-spring);
   }
   .h-card--interactive:hover {
     background-image: linear-gradient(var(--hali-state-hover), var(--hali-state-hover));
-    border-color: var(--hali-border-strong);
+    transform: translateY(-3px);
   }
   .h-card__header {
     display: flex;
@@ -828,7 +844,7 @@
     padding: var(--hali-space-12) var(--hali-space-16);
     border: 1px solid var(--hali-border-default);
     border: 1px solid color-mix(in srgb, var(--h-text, var(--hali-text-default)) 35%, transparent);
-    border-radius: var(--hali-radius-lg);
+    border-radius: var(--hali-shape-field);
     background: var(--h-container, var(--hali-surface-raised));
     color: var(--hali-text-default);
   }
@@ -866,13 +882,12 @@
     min-width: 288px;
     max-width: 480px;
     padding: var(--hali-space-12) var(--hali-space-16);
-    border: 1px solid var(--hali-border-default);
-    border-inline-start: 4px solid var(--h-bold, var(--hali-brand-bold));
-    border-radius: var(--hali-radius-md);
+    border: 0;
+    border-radius: var(--hali-shape-field);
     background: var(--hali-surface-overlay);
     color: var(--hali-text-default);
     box-shadow: var(--hali-shadow-overlay);
-    animation: h-toast-in var(--hali-duration-base) var(--hali-ease-enter);
+    animation: h-toast-in var(--hali-duration-expressive) var(--hali-ease-spring);
   }
   .h-toast > .h-icon { color: var(--h-accent, var(--hali-brand-text)); }
   .h-toast__message { flex: 1; }
@@ -971,12 +986,12 @@
     display: inline-flex;
     align-items: center;
     height: var(--hali-size-control-md);
-    padding: 0 var(--hali-space-12);
-    border-radius: var(--hali-radius-md);
+    padding: 0 var(--hali-space-16);
+    border-radius: var(--hali-shape-control);
     color: var(--hali-text-subtle);
     font: var(--hali-type-label-lg);
     text-decoration: none;
-    transition: background-color var(--hali-duration-fast) var(--hali-ease-standard);
+    transition: background-color var(--hali-duration-productive) var(--hali-ease-productive);
   }
   .h-topbar__link:hover { background: var(--hali-state-hover); color: var(--hali-text-default); }
   .h-topbar__link[aria-current="page"] {
@@ -1005,13 +1020,13 @@
     display: flex;
     align-items: center;
     gap: var(--hali-space-12);
-    min-height: var(--hali-size-control-md);
-    padding: 0 var(--hali-space-12);
-    border-radius: var(--hali-radius-md);
+    min-height: var(--hali-size-control-lg);
+    padding: 0 var(--hali-space-16);
+    border-radius: var(--hali-shape-control);
     color: var(--hali-text-default);
     font: var(--hali-type-label-lg);
     text-decoration: none;
-    transition: background-color var(--hali-duration-fast) var(--hali-ease-standard);
+    transition: background-color var(--hali-duration-productive) var(--hali-ease-productive);
   }
   .h-sidenav__item > .h-icon { color: var(--hali-icon-default); }
   .h-sidenav__item:hover { background: var(--hali-state-hover); }
@@ -1049,9 +1064,9 @@
     display: flex;
     flex-direction: column;
     min-width: 208px;
-    padding: var(--hali-space-4);
-    border: 1px solid var(--hali-border-default);
-    border-radius: var(--hali-radius-lg);
+    padding: var(--hali-space-8);
+    border: 0;
+    border-radius: var(--hali-shape-field);
     background: var(--hali-surface-overlay);
     box-shadow: var(--hali-shadow-overlay);
   }
@@ -1068,7 +1083,7 @@
     min-height: var(--hali-size-control-md);
     padding: 0 var(--hali-space-12);
     border: 0;
-    border-radius: var(--hali-radius-md);
+    border-radius: var(--hali-radius-lg);
     background: transparent;
     color: var(--hali-text-default);
     font: var(--hali-type-body-md);
@@ -1119,8 +1134,8 @@
     max-height: calc(100vh - 64px);
     max-height: calc(100dvh - 64px);
     padding: 0;
-    border: 1px solid var(--hali-border-default);
-    border-radius: var(--hali-radius-xl);
+    border: 0;
+    border-radius: var(--hali-shape-card);
     background: var(--hali-surface-overlay);
     color: var(--hali-text-default);
     box-shadow: var(--hali-shadow-modal);
@@ -1163,8 +1178,8 @@
   /* ---- Table ------------------------------------------------------------------------------- */
   .h-table-wrap {
     overflow: auto;
-    border: 1px solid var(--hali-border-default);
-    border-radius: var(--hali-radius-lg);
+    border: 0;
+    border-radius: var(--hali-shape-card);
     background: var(--hali-surface-raised);
   }
   .h-toolbar {
@@ -1407,6 +1422,145 @@
     tab-size: 2;
   }
 
+
+  /* ---- New in 3.0: halo, search, hero, stat, bars, floating navigation --------------------- */
+  /* Halo: a soft brand glow and a faint accent glow behind a stage. Put it on the page canvas. */
+  .h-halo {
+    background-image:
+      radial-gradient(900px 520px at 88% -8%, var(--hali-glow-soft), transparent 62%),
+      radial-gradient(700px 520px at -6% 34%, color-mix(in srgb, var(--hali-accent-purple-fill) 11%, transparent), transparent 62%);
+    background-repeat: no-repeat;
+  }
+
+  /* Search pill. Pair with an icon first, the input, and an optional .h-kbd hint. */
+  .h-search {
+    display: flex;
+    align-items: center;
+    gap: var(--hali-space-12);
+    min-height: var(--hali-size-control-lg);
+    padding: 0 var(--hali-space-20);
+    border: 1px solid var(--hali-border-default);
+    border-radius: var(--hali-shape-control);
+    background: var(--hali-surface-default);
+    color: var(--hali-text-subtle);
+    transition: box-shadow var(--hali-duration-productive) var(--hali-ease-productive), border-color var(--hali-duration-productive) var(--hali-ease-productive);
+  }
+  .h-search:focus-within { border-color: var(--hali-border-focus); box-shadow: 0 0 0 6px var(--hali-glow-soft); }
+  .h-search__input {
+    flex: 1;
+    min-width: 0;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: var(--hali-text-default);
+    font: var(--hali-type-body-md);
+  }
+  .h-search__input::placeholder { color: var(--hali-text-subtle); opacity: 1; }
+
+  /* Hero: the one big moment on a screen. A headline, a lead, and an aside for time or status. */
+  .h-hero {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--hali-space-32);
+    overflow: hidden;
+    padding: var(--hali-space-40);
+    border: 0;
+    border-radius: var(--hali-radius-3xl);
+    background: linear-gradient(135deg, color-mix(in srgb, var(--hali-brand-bold) 10%, var(--hali-surface-raised)), var(--hali-surface-raised) 62%);
+    color: var(--hali-text-default);
+  }
+  /* The ripple: three faint rings, echoing the Hali mark. Decoration only. */
+  .h-hero::after {
+    content: "";
+    position: absolute;
+    top: -130px;
+    right: -130px;
+    width: 420px;
+    height: 420px;
+    border-radius: 50%;
+    pointer-events: none;
+    box-shadow:
+      0 0 0 44px color-mix(in srgb, var(--hali-brand-bold) 7%, transparent),
+      0 0 0 96px color-mix(in srgb, var(--hali-brand-bold) 4.5%, transparent),
+      0 0 0 156px color-mix(in srgb, var(--hali-brand-bold) 3%, transparent);
+  }
+  .h-hero > * { position: relative; z-index: 1; }
+  .h-hero__eyebrow { margin-bottom: var(--hali-space-12); }
+  .h-hero__title { font: var(--hali-type-hero); letter-spacing: var(--hali-tracking-hero); margin-bottom: var(--hali-space-8); }
+  .h-hero__lead { max-width: 46ch; font: var(--hali-type-body-lg); color: var(--hali-text-default); }
+  .h-hero__aside { align-self: flex-end; display: flex; flex-direction: column; gap: var(--hali-space-12); align-items: flex-end; text-align: end; }
+  .h-hero__actions { display: flex; flex-wrap: wrap; gap: var(--hali-space-8); }
+
+  /* Stat tile: label, big number, a footer for a lozenge and a tiny chart. */
+  .h-stat {
+    display: flex;
+    flex-direction: column;
+    gap: var(--hali-space-4);
+    padding: var(--hali-space-24);
+    border: 0;
+    border-radius: var(--hali-shape-card);
+    background: var(--hali-surface-raised);
+    transition: transform var(--hali-duration-expressive) var(--hali-ease-spring);
+  }
+  .h-stat:hover { transform: translateY(-3px); }
+  .h-stat__label { color: var(--hali-text-subtle); font: var(--hali-type-label-lg); }
+  .h-stat__value { font: var(--hali-type-display); letter-spacing: var(--hali-tracking-display); font-variant-numeric: tabular-nums; }
+  .h-stat__foot { display: flex; align-items: center; justify-content: space-between; gap: var(--hali-space-12); margin-top: var(--hali-space-8); }
+
+  /* Bars: a single series bar chart. Set --h-value (0 to 100) on each bar. Always give a table or
+     list of the same numbers to people who cannot see the chart. */
+  .h-bars { display: flex; align-items: flex-end; gap: var(--hali-space-12); height: 210px; margin: 0; padding: 0; list-style: none; }
+  .h-bars__col { flex: 1; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: var(--hali-space-8); }
+  .h-bars__bar {
+    width: 100%;
+    height: calc(var(--h-value, 50) * 1%);
+    border-radius: 16px 16px var(--hali-radius-sm) var(--hali-radius-sm);
+    background: color-mix(in srgb, var(--hali-brand-bold) 30%, var(--hali-surface-strong));
+    transform-origin: bottom;
+    transition: background-color var(--hali-duration-productive) var(--hali-ease-productive), transform var(--hali-duration-expressive) var(--hali-ease-spring);
+  }
+  .h-bars__bar:hover { background: color-mix(in srgb, var(--hali-brand-bold) 55%, var(--hali-surface-strong)); transform: scaleY(1.02); }
+  .h-bars__bar--now { background: var(--hali-brand-bold); box-shadow: 0 0 36px -4px var(--hali-glow-brand); }
+  .h-bars__bar--now:hover { background: var(--hali-brand-bold-hover); }
+  .h-bars__label { color: var(--hali-text-subtle); font: var(--hali-type-label-md); }
+  .h-bars__value { color: var(--hali-brand-text); font: var(--hali-type-code-md); font-weight: 500; }
+
+  /* Floating navigation. Put it in an appshell with h-appshell--float. The stage behind it is
+     surface.sunken (with h-halo), the nav is surface.default, and cards on the page are surface.raised. */
+  .h-appshell--float {
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas: "side main";
+    grid-template-rows: minmax(0, 1fr);
+    background-color: var(--hali-surface-sunken);
+  }
+  .h-sidenav--float {
+    width: 248px;
+    margin: var(--hali-space-16) 0 var(--hali-space-16) var(--hali-space-16);
+    padding: var(--hali-space-20) var(--hali-space-12);
+    border: 0;
+    border-radius: var(--hali-shape-card);
+    background: var(--hali-surface-default);
+  }
+  .h-sidenav--float .h-sidenav__item[aria-current="page"] {
+    background: var(--hali-brand-container);
+    color: var(--hali-brand-on-container);
+  }
+  .h-sidenav--float .h-sidenav__item[aria-current="page"]::after {
+    content: "";
+    margin-inline-start: auto;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--hali-brand-bold);
+    box-shadow: 0 0 12px var(--hali-glow-brand);
+  }
+  @media (max-width: 839px) {
+    .h-appshell--float { grid-template-columns: minmax(0, 1fr); grid-template-areas: "main"; }
+    .h-appshell--float > .h-appshell__side { display: none; }
+  }
+
   .h-skip {
     position: absolute;
     top: calc(var(--hali-space-48) * -1);
@@ -1488,6 +1642,7 @@
   .h-spinner { animation-duration: 2.4s; }
   .h-button[aria-busy="true"]::after { animation-duration: 2.4s; }
   .h-toast,
+  .h-lozenge--live .h-dot,
   .h-dialog[open] { animation: none; }
 }
 
@@ -1503,6 +1658,10 @@
   .h-toast,
   .h-alert,
   .h-lozenge,
+  .h-hero,
+  .h-stat,
+  .h-search,
+  .h-sidenav--float,
   .h-table-wrap { border: 1px solid CanvasText; }
   .h-button--bold,
   .h-check input:checked,

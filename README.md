@@ -6,31 +6,37 @@
 
 <p align="center">
   A dark first design language for web applications.<br>
-  Nord at its core, Atlassian structure, Material 3 tonal surfaces, readable by default.
+  Soft where you touch, crisp where you read. Atlassian structure, Material 3 depth, IBM Carbon rigor, readable by default.
 </p>
 
 <p align="center">
-  <strong>Version 2.1.0</strong> &nbsp;|&nbsp; <a href="CHANGELOG.md">Changelog</a> &nbsp;|&nbsp; <a href="docs/VERSIONING.md">Versioning</a> &nbsp;|&nbsp; <a href="docs/MIGRATING-2.0.md">Migrating to 2.0</a> &nbsp;|&nbsp; <a href="CONTRIBUTING.md">Contributing</a>
+  <strong>Version 3.0.0</strong> &nbsp;|&nbsp; <a href="CHANGELOG.md">Changelog</a> &nbsp;|&nbsp; <a href="docs/VERSIONING.md">Versioning</a> &nbsp;|&nbsp; <a href="docs/MIGRATING-3.0.md">Migrating to 3.0</a> &nbsp;|&nbsp; <a href="CONTRIBUTING.md">Contributing</a>
 </p>
 
 ---
 
 ## What Hali is
 
-Hali is a small, complete system for building web apps that look calm and stay readable. It takes the
-[Nord](https://www.nordtheme.com/) palette as its identity, borrows the semantic structure and density of
-[Atlassian's design system](https://atlassian.design/), and borrows tonal surfaces, state layers, shape
-and motion from [Material Design 3](https://m3.material.io/).
+Hali is a small, complete system for building web apps that feel calm, warm and alive, and stay readable.
+It borrows the semantic structure and density of [Atlassian's design system](https://atlassian.design/),
+tonal depth and state layers from [Material Design 3](https://m3.material.io/), and layering, contrast
+discipline and the idea of productive and expressive motion from [IBM Carbon](https://carbondesignsystem.com/).
+Mood, shape, palettes and the halo are Hali's own.
+
+**Soft where you touch, crisp where you read.** Buttons, chips and search are pills. Fields are 18px.
+Cards are 28px and have no border: depth is tone. Data stays tight. Version 3 moved Hali away from
+the boxed look of an enterprise console toward something you want to open.
 
 The name comes from Lake Hali: cold, still, and deep.
 
 **Dark first.** Dark is the default theme and the one every decision is made in. Light is derived from
 it, not the other way round. An increased contrast layer sits on top of both.
 
-**Readable Nord.** Stock Nord is beautiful and a little too quiet. Its comment gray is 1.7:1 on its own
-background, and most Aurora colors fail on light surfaces. Hali keeps the palette and lifts only what
-fails, in OKLCH so every hue keeps its character. All 186 checked pairings meet their targets, and the
-report is generated on every build: [tokens/CONTRAST.md](tokens/CONTRAST.md).
+**Five palettes.** Polar (the default, ink navy and glacier cyan), Aurora (violet), Ember (wine and rose,
+with a sunrise light theme), Midnight (near black, for late nights) and Nord (the stock palette, opt in).
+Choose one with `data-palette` on `<html>`, or `Hali.setPalette('ember')`. Every palette comes in dark and
+light, and every pairing is checked. Anything that misses its target is lifted in OKLCH so a hue keeps its
+character. The report is generated on every build: [tokens/CONTRAST.md](tokens/CONTRAST.md).
 
 ## Principles
 
@@ -99,12 +105,12 @@ hali/
 
 | Foundation | Hali |
 | --- | --- |
-| Color | Nord Polar Night surfaces, Snow Storm text, Frost brand, Aurora status. Five tonal surface steps. |
-| Type | Inter and JetBrains Mono. Fourteen roles on Material names, 14px default body. |
+| Color | Five palettes (Polar, Aurora, Ember, Midnight, Nord). Five tonal surface steps, no borders needed. A soft brand glow. |
+| Type | Bricolage Grotesque for headlines, IBM Plex Sans for UI, IBM Plex Mono for figures. Fifteen roles, 14px default body. |
 | Space | 4px grid. Tokens at 2, 4, 6, 8, 12, 16, 20, 24, 32, 40, 48, 64, 80. |
-| Shape | Controls 8px, cards 12px, dialogs 16px, pills for chips and badges. |
+| Shape | Controls are pills, fields 18px, cards and dialogs 28px, hero 32px, data rows 8px. |
 | Elevation | Tonal first, shadow only for menus, dialogs and toasts. |
-| Motion | 100, 200, 300 and 500ms. Material easing curves. Honors reduced motion. |
+| Motion | Productive (160ms, quiet) for work, expressive (480ms, a small spring) for wins. Honors reduced motion. |
 | Layout | Material window size classes: 600, 840, 1200, 1600. 12 column grid. |
 | Icons | 24px grid, 1.75px stroke, round caps. |
 
@@ -153,11 +159,13 @@ optional `js/hali.js` supplies the keyboard behavior for tabs, menus and dialogs
 
 ## Credits
 
-The color palette is [Nord](https://www.nordtheme.com/) by Arctic Ice Studio. Hali's structure draws on
-[Atlassian's design system](https://atlassian.design/) and [Material Design 3](https://m3.material.io/).
-Hali is an independent project and is not affiliated with Atlassian, Google or Arctic Ice Studio.
+Hali's structure draws on [Atlassian's design system](https://atlassian.design/),
+[Material Design 3](https://m3.material.io/) and [IBM Carbon](https://carbondesignsystem.com/). The opt in
+Nord palette is [Nord](https://www.nordtheme.com/) by Arctic Ice Studio. Hali is an independent project and is
+not affiliated with Atlassian, Google, IBM or Arctic Ice Studio.
 
 ## License
 
-[MIT](LICENSE). The Nord palette is also MIT licensed, by Arctic Ice Studio. Inter and JetBrains Mono are
-separate projects under the SIL Open Font License and are not bundled.
+[MIT](LICENSE). The Nord palette is also MIT licensed, by Arctic Ice Studio. Bricolage Grotesque, IBM Plex
+Sans and IBM Plex Mono are separate projects under the SIL Open Font License and are not bundled: load them
+from Google Fonts or host them yourself.

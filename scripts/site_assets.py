@@ -7,12 +7,17 @@ HEAD_JS = r"""
     var t = localStorage.getItem('hali-docs-theme');
     var r = document.documentElement;
     r.setAttribute('data-theme', t === 'light' ? 'light' : 'dark');
+    var p = localStorage.getItem('hali-docs-palette');
+    if (p && p !== 'polar') { r.setAttribute('data-palette', p); }
     if (localStorage.getItem('hali-docs-contrast') === 'more') { r.setAttribute('data-contrast', 'more'); }
   } catch (e) {}
 })();
 """
 
 DOC_CSS = r"""
+.doc-pal { display: flex; border-radius: 999px; overflow: hidden; height: 28px; margin-top: 12px; }
+.doc-pal__chip { flex: 1; }
+
 html { scroll-behavior: smooth; scroll-padding-top: 72px; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 
@@ -265,7 +270,11 @@ DOC_JS = r"""
   /* Theme and contrast */
   var theme = load('hali-docs-theme') === 'light' ? 'light' : 'dark';
   var more = load('hali-docs-contrast') === 'more';
+  var palette = load('hali-docs-palette') || 'polar';
   function apply() {
+    if (palette === 'polar') { root.removeAttribute('data-palette'); } else { root.setAttribute('data-palette', palette); }
+    var ps = document.querySelector('[data-palette-select]');
+    if (ps) { ps.value = palette; }
     root.setAttribute('data-theme', theme);
     if (more) { root.setAttribute('data-contrast', 'more'); } else { root.removeAttribute('data-contrast'); }
     all('[data-theme-set]').forEach(function (b) {
@@ -277,6 +286,8 @@ DOC_JS = r"""
   all('[data-theme-set]').forEach(function (b) {
     b.addEventListener('click', function () { theme = b.getAttribute('data-theme-set'); save('hali-docs-theme', theme); apply(); });
   });
+  var psel = document.querySelector('[data-palette-select]');
+  if (psel) { psel.addEventListener('change', function () { palette = psel.value; save('hali-docs-palette', palette); apply(); }); }
   var ct = document.querySelector('[data-contrast-toggle]');
   if (ct) { ct.addEventListener('change', function () { more = ct.checked; save('hali-docs-contrast', more ? 'more' : 'normal'); apply(); }); }
   apply();

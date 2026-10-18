@@ -40,13 +40,14 @@ TOKENS = json.loads(read("tokens/hali-tokens.json"))
 DARK = TOKENS["theme"]["dark"]
 LIGHT = TOKENS["theme"]["light"]
 STATIC = TOKENS["static"]
+PALETTES = TOKENS["palettes"]
 SPRITE = read("icons/hali-icons.svg")
 SPRITE16 = read("icons/hali-icons-16.svg")
 ICON16_IDS = re.findall(r'<symbol id="i16-([^"]+)"', SPRITE16)
 ICON_IDS = re.findall(r'<symbol id="(i-[^"]+)"', SPRITE)
 
-_, DARK_CHECKS, _ = build_tokens.build_theme("dark")
-_, LIGHT_CHECKS, _ = build_tokens.build_theme("light")
+_, DARK_CHECKS, _ = build_tokens.build_theme("dark", build_tokens.POLAR)
+_, LIGHT_CHECKS, _ = build_tokens.build_theme("light", build_tokens.POLAR)
 
 esc = html.escape
 I = C.I
@@ -183,8 +184,12 @@ P = Page()
 # ---------------------------------------------------------------------------------------------
 
 def overview():
-    semantic = len([k for k in DARK if not k.startswith("nord.")])
-    checks = len(DARK_CHECKS) + len(LIGHT_CHECKS)
+    semantic = len([k for k in DARK if not k.startswith("palette.")])
+    checks = 0
+    for _name, (_label, _note, _colors, _light_from) in build_tokens.PALETTES.items():
+        for _mode in ("dark", "light"):
+            _src = build_tokens.PALETTES[_light_from][2] if (_mode == "light" and _light_from) else _colors
+            checks += len(build_tokens.build_theme(_mode, _src)[1])
     failing = [c for c in DARK_CHECKS + LIGHT_CHECKS if contrast(c[1], c[2]) < c[3]]
     if failing:
         raise SystemExit("Refusing to build the site: %d contrast checks are failing." % len(failing))
@@ -198,12 +203,14 @@ def overview():
         '<div class="doc-stat"><div class="doc-stat__value">%s</div><div class="doc-stat__label">%s</div></div>' % (v, l)
         for v, l in stats)
     borrow = [
-        ("Nord", "Identity",
-         "The palette, the cool Polar Night surfaces and the Frost accent. Every color in Hali traces back to a Nord value."),
         ("Atlassian", "Structure",
-         "Tokens named by role, bold and subtle emphasis, a 4px grid with a 14px body, lozenges and section messages."),
-        ("Material 3", "Surfaces and shape",
-         "Tonal elevation, container colors, state layers, type role names, window size classes and expressive easing."),
+         "Tokens named by role, bold and subtle emphasis, a 4px grid, lozenges, inline edit and empty states."),
+        ("Material 3", "Depth and state",
+         "Tonal elevation, container colors, state layers, type role names and window size classes."),
+        ("IBM Carbon", "Rigor",
+         "Layering by tone, strict contrast tokens, productive and expressive motion, and IBM Plex type."),
+        ("Original to Hali", "Mood",
+         "Soft where you touch, crisp where you read. Five palettes, a halo of light, and a ripple that echoes the mark."),
     ]
     borrow_html = "".join(
         '<div class="h-card"><div class="h-label-md h-text-brand">%s</div><h3 class="h-card__title h-mt-4">%s</h3>'
@@ -212,15 +219,15 @@ def overview():
 <div class="doc-hero">
   <div class="h-cluster">%(mark)s<span class="h-lozenge h-is-brand">Version %(v)s</span><span class="h-lozenge">Dark first</span><span class="h-lozenge h-is-success">%(check)s WCAG AA and AAA text</span></div>
   <h1 class="doc-hero__title">Hali</h1>
-  <p class="doc-lead">A dark first design language for web applications. Nord at its core, Atlassian structure,
-  Material 3 tonal surfaces, readable by default. Named for Lake Hali: cold, still, and deep.</p>
+  <p class="doc-lead">A dark first design language for web applications. Soft where you touch, crisp where you read.
+  Atlassian structure, Material 3 depth, IBM Carbon rigor, readable by default. Named for Lake Hali: cold, still, and deep.</p>
   <div class="h-cluster h-mt-24">
     <a class="h-button h-button--bold h-button--lg" href="#getting-started" style="text-decoration:none">Get started %(arrow)s</a>
     <a class="h-button h-button--tonal h-button--lg" href="#actions-button" style="text-decoration:none">Browse components</a>
     <a class="h-button h-button--subtle h-button--lg" href="#changelog" style="text-decoration:none">What is new in %(v)s</a>
   </div>
   <div class="doc-stats">%(stats)s</div>
-  <div class="h-grid h-mt-32" style="--h-col:240px">%(borrow)s</div>
+  <div class="h-grid h-mt-32" style="--h-col:200px">%(borrow)s</div>
 </div>""" % {"mark": C.MARK("h-icon--lg h-icon--brand"), "v": VERSION, "check": I("check"),
              "arrow": I("arrow-right"), "stats": stat_html, "borrow": borrow_html}
     P.section("overview", None, body, nav_label="Overview")
@@ -310,24 +317,6 @@ def principles():
 # Foundations
 # ---------------------------------------------------------------------------------------------
 
-NORD_GROUPS = [
-    ("Polar Night", ["nord0", "nord1", "nord2", "nord3"], "Dark surfaces. The base of every dark theme."),
-    ("Snow Storm", ["nord4", "nord5", "nord6"], "Light text in dark, light surfaces in light."),
-    ("Frost", ["nord7", "nord8", "nord9", "nord10"], "The brand. Cool blues and teals."),
-    ("Aurora", ["nord11", "nord12", "nord13", "nord14", "nord15"], "Status and accents: red, orange, yellow, green, purple."),
-]
-
-STOCK_ROWS = [
-    ("dark", "Comment gray as secondary text", "#4C566A", "text.subtlest"),
-    ("dark", "Red as error text", "#BF616A", "danger.text"),
-    ("dark", "Deep blue as link text", "#5E81AC", "info.text"),
-    ("light", "Deep blue as link text", "#5E81AC", "brand.text"),
-    ("light", "Yellow as warning text", "#EBCB8B", "warning.text"),
-    ("light", "Green as success text", "#A3BE8C", "success.text"),
-    ("light", "Orange as accent text", "#D08770", "accent.orange.text"),
-    ("light", "Purple as discovery text", "#B48EAD", "discovery.text"),
-]
-
 PAIRS = [
     ("Primary text on the page", "text.default", "surface.default", 7.0),
     ("Primary text on the strong fill", "text.default", "surface.strong", 7.0),
@@ -353,29 +342,33 @@ PAIRS = [
 def color():
     parts = []
 
-    # Palette
-    palette = ""
-    for name, keys, note in NORD_GROUPS:
-        sw = "".join(
-            '<div class="doc-swatch"><div class="doc-swatch__chip" style="background:var(--hali-nord-%s)"></div>'
-            '<div class="doc-swatch__meta"><div class="doc-swatch__name">%s</div>'
-            '<div class="doc-swatch__var">--hali-nord-%s</div><div class="doc-swatch__vals">%s</div></div></div>'
-            % (k[4:], k, k[4:], DARK["nord." + k[4:]]) for k in keys)
-        palette += '<h4 class="doc-h4">%s</h4><p class="doc-p h-text-subtle">%s</p><div class="doc-swatches">%s</div>' % (name, note, sw)
-    parts.append('<h3 class="doc-h3">The Nord palette</h3><p class="doc-p">Sixteen colors, unchanged. Hali exposes them as <code class="h-code">--hali-nord-0</code> to <code class="h-code">--hali-nord-15</code> for illustration and syntax themes. Interface text and fills never use them directly: they use the semantic tokens below.</p>' + palette)
+    # Palettes
+    cards = ""
+    for key, pal in PALETTES.items():
+        d, l = pal["dark"], pal["light"]
+        chips = "".join('<span class="doc-pal__chip" style="background:%s"></span>' % d[t] for t in
+                        ("surface.sunken", "surface.default", "surface.raised", "surface.overlay", "surface.strong", "brand.bold", "success.bold", "warning.bold", "danger.bold"))
+        lchips = "".join('<span class="doc-pal__chip" style="background:%s"></span>' % l[t] for t in
+                         ("surface.sunken", "surface.default", "surface.raised", "surface.overlay", "surface.strong", "brand.bold", "success.bold", "warning.bold", "danger.bold"))
+        cards += ('<div class="h-card"><div class="h-cluster h-split"><h4 class="h-card__title">%s</h4>'
+                  '<code class="h-code">data-palette="%s"</code></div><p class="h-card__meta">%s</p>'
+                  '<div class="doc-pal">%s</div><div class="doc-pal h-mt-8">%s</div></div>'
+                  % (pal["label"], key, esc(pal["note"]), chips, lchips))
+    parts.append('<h3 class="doc-h3">Palettes</h3><p class="doc-p">Five palettes share every token name and every contrast guarantee. Polar is the default. '
+                 'Set <code class="h-code">data-palette</code> on <code class="h-code">&lt;html&gt;</code> to switch, or call <code class="h-code">Hali.setPalette(name)</code>. '
+                 'The top row of each card is dark, the bottom row is light. Midnight is the darkest and reuses Polar for light. Nord is the stock Nord palette for apps that want the 2.x look.</p>'
+                 '<div class="h-grid" style="--h-col:300px">%s</div>' % cards)
 
-    # Why tweak
-    rows = []
-    for mode, label, stock_fg, token in STOCK_ROWS:
-        theme = DARK if mode == "dark" else LIGHT
-        bg = theme["surface.default"]
-        hali_fg = theme[token]
-        r1, r2 = ratio(stock_fg, bg), ratio(hali_fg, bg)
-        s1 = '<span class="doc-sample" style="color:%s;background:%s;padding:3px 10px;border-radius:6px;white-space:nowrap">Aa Sample</span>' % (stock_fg, bg)
-        s2 = '<span class="doc-sample" style="color:%s;background:%s;padding:3px 10px;border-radius:6px;white-space:nowrap">Aa Sample</span>' % (hali_fg, bg)
-        rows.append([mode.capitalize(), label, s1, "%.2f:1" % r1, s2, "%.2f:1" % r2, '<code class="h-code">%s</code>' % token])
-    why = table(["Theme", "Use", "Stock Nord", ">Ratio", "Hali", ">Ratio", "Token"], rows)
-    parts.append('<h3 class="doc-h3">Why Nord needed tweaks</h3><p class="doc-p">Stock Nord is beautiful and a little too quiet. Its comment gray is 1.7:1 on its own background, and most Aurora colors fail on light surfaces. Hali keeps every hue and lifts only what fails. The adjustment happens in OKLCH, so a red stays red and a yellow stays yellow as they gain contrast.</p>' + why)
+    sixteen = "".join(
+        '<div class="doc-swatch"><div class="doc-swatch__chip" style="background:var(--hali-palette-%d)"></div>'
+        '<div class="doc-swatch__meta"><div class="doc-swatch__name">slot %d</div>'
+        '<div class="doc-swatch__var">--hali-palette-%d</div><div class="doc-swatch__vals">%s</div></div></div>'
+        % (i, i, i, DARK["palette.%d" % i]) for i in range(16))
+    parts.append('<h3 class="doc-h3">Raw palette</h3><p class="doc-p">Each palette fills sixteen slots, and they follow the palette you pick. Use them for illustration, charts and syntax themes. '
+                 'Interface text and fills never use them directly: they use the semantic tokens below. The values shown are Polar dark.</p><div class="doc-swatches">%s</div>' % sixteen)
+
+    parts.append('<h3 class="doc-h3">Readable by construction</h3><p class="doc-p">Every palette is built by one engine. Hues are chosen by hand, then any value that misses its contrast target is lifted in OKLCH, so a red stays red and a yellow stays yellow as it gains contrast. '
+                 'The build fails if any pairing misses, in any palette, in dark or light. The full report is in <code class="h-code">tokens/CONTRAST.md</code>.</p>')
 
     # Surfaces
     surf_notes = {
@@ -433,12 +426,12 @@ def color():
     parts.append('<h3 class="doc-h3">Contrast</h3><p class="doc-p">%d pairings are checked on every build in both themes and the build fails if any misses. A selection:</p>%s<p class="doc-p h-text-subtle">The full report is generated at <code class="h-code">tokens/CONTRAST.md</code>.</p>'
                  % (len(DARK_CHECKS) + len(LIGHT_CHECKS), table(["Pairing", "Tokens", ">Target", ">Dark", ">Light"], mrows)))
 
-    P.section("color", "Color", "".join(parts), lead="Nord for identity, tuned for readability. Dark is the default, and every token has a light value.")
+    P.section("color", "Color", "".join(parts), lead="Five palettes, one set of roles. Dark is the default, and every token has a light value.")
 
 
 def typography():
     samples = {
-        "display": "Calm by design", "headline-lg": "Calm interfaces for busy people",
+        "hero": "Tonight at Vesper", "display": "Calm by design", "headline-lg": "Calm interfaces for busy people",
         "headline-md": "Calm interfaces for busy people", "headline-sm": "Calm interfaces for busy people",
         "title-lg": "Project settings", "title-md": "Project settings", "title-sm": "Project settings",
         "body-lg": "Hali keeps dense screens readable with a 14px body, a 4px grid and quiet tonal surfaces.",
@@ -449,12 +442,12 @@ def typography():
     rows = ""
     for role, (fam, weight, size, line, track) in STATIC["type"].items():
         rows += ('<div class="doc-type-row"><div class="doc-sample" style="font:var(--hali-type-%(r)s);letter-spacing:var(--hali-tracking-%(r)s)">%(s)s</div>'
-                 '<div><code class="h-code">.h-%(r)s</code><div class="h-body-sm h-text-subtle h-mt-4">%(z)dpx / %(l)dpx, weight %(w)d, %(f)s</div></div></div>'
-                 % {"r": role, "s": esc(samples[role]), "z": size, "l": line, "w": weight, "f": "tracking %gem" % track})
-    fonts = ("<p class=\"doc-p\"><strong>Sans</strong>: <code class=\"h-code\">%s</code></p><p class=\"doc-p\"><strong>Mono</strong>: <code class=\"h-code\">%s</code></p>"
-             % (esc(STATIC["font"]["sans"]), esc(STATIC["font"]["mono"])))
-    body = ('<h3 class="doc-h3">Typefaces</h3><p class="doc-p">Inter for interface text and JetBrains Mono for code, with the system fonts as the fallback. Neither is bundled, so add them with your own font loading.</p>%s'
-            '<h3 class="doc-h3">Type scale</h3><p class="doc-p">Fourteen roles. The names come from Material 3 and the sizes from Atlassian: body text is 14px, headings step up in clear intervals, and labels are medium weight.</p>%s'
+                 '<div><code class="h-code">.h-%(cls)s</code><div class="h-body-sm h-text-subtle h-mt-4">%(z)dpx / %(l)dpx, weight %(w)d, %(f)s</div></div></div>'
+                 % {"r": role, "cls": "type-hero" if role == "hero" else role, "s": esc(samples[role]), "z": size, "l": line, "w": weight, "f": "tracking %gem" % track})
+    fonts = ("<p class=\"doc-p\"><strong>Display</strong>: <code class=\"h-code\">%s</code></p><p class=\"doc-p\"><strong>Sans</strong>: <code class=\"h-code\">%s</code></p><p class=\"doc-p\"><strong>Mono</strong>: <code class=\"h-code\">%s</code></p>"
+             % (esc(STATIC["font"]["display"]), esc(STATIC["font"]["sans"]), esc(STATIC["font"]["mono"])))
+    body = ('<h3 class="doc-h3">Typefaces</h3><p class="doc-p">Bricolage Grotesque for headlines and big numbers, IBM Plex Sans for interface text, and IBM Plex Mono for code and figures, with the system fonts as the fallback. None are bundled: load them from Google Fonts or host them yourself.</p>%s'
+            '<h3 class="doc-h3">Type scale</h3><p class="doc-p">Fifteen roles. The names come from Material 3 and the sizes from Atlassian: body text is 14px, headings step up in clear intervals, and labels are medium weight.</p>%s'
             '<h3 class="doc-h3">Guidelines</h3>%s' % (fonts, rows, ul([
                 "Choose a role by what the text does, not how big you want it. Use `title` for card and section names, `label` for controls, and `body` for reading.",
                 "Keep line length between 45 and 75 characters. `h-prose` caps at 68ch.",
@@ -523,19 +516,20 @@ def layout():
 def shape():
     use = {
         "xs": "Checkboxes, keys, inline code",
-        "sm": "Lozenges, skeletons",
-        "md": "Buttons, fields, chips, menu items",
-        "lg": "Cards, alerts, menus, tables",
-        "xl": "Dialogs",
-        "2xl": "Reserved for large containers",
-        "full": "Badges, avatars, switches, progress",
+        "sm": "Skeletons, small marks",
+        "md": "Data rows and cells",
+        "lg": "Menu items",
+        "xl": "Fields, alerts, toasts, menus (shape.field)",
+        "2xl": "Cards, tables, dialogs (shape.card)",
+        "3xl": "The hero block (shape.hero)",
+        "full": "Buttons, chips, lozenges, search, switches, avatars (shape.control)",
     }
     cells = "".join(
         '<div class="doc-radius"><div class="doc-radius__box" style="border-radius:%s"></div><div><code class="h-code">%s</code><div class="h-body-sm h-text-subtle">%s</div></div></div>'
         % ("var(--hali-radius-%s)" % k, k, "%spx" % v if v < 1000 else "9999px") for k, v in STATIC["radius"].items())
     rows = [['<code class="h-code">%s</code>' % k, "%dpx" % v if v < 1000 else "full", use[k]] for k, v in STATIC["radius"].items()]
-    body = '<div class="doc-radius-grid">%s</div>%s<p class="doc-p">Nested shapes step down: a button inside a card uses a smaller radius than the card, so corners look concentric.</p>' % (cells, table(["Token", ">Radius", "Use"], rows))
-    P.section("shape", "Shape", body, lead="Rounded enough to feel soft, restrained enough to feel precise.")
+    body = '<div class="doc-radius-grid">%s</div>%s<p class="doc-p">Soft where you touch, crisp where you read: controls are pills, fields are 18px, cards are 28px, and data stays tight at 8px. Components use the shape roles (<code class="h-code">--hali-shape-control</code>, <code class="h-code">-field</code>, <code class="h-code">-card</code>, <code class="h-code">-hero</code>, <code class="h-code">-data</code>), so you can retune a whole app by changing one role.</p>' % (cells, table(["Token", ">Radius", "Use"], rows))
+    P.section("shape", "Shape", body, lead="Soft where you touch, crisp where you read.")
 
 
 def elevation():
@@ -544,22 +538,28 @@ def elevation():
         for n, d in [("raised", "Cards that need to lift"), ("overlay", "Menus and popovers"), ("modal", "Dialogs and sheets")])
     body = ('<p class="doc-p">Hierarchy comes from tone: look at the five surface steps in the Color section. Shadows are reserved for things that float above the page and are only visible against a quiet background.</p>'
             '<div class="doc-shadows">%s</div>%s' % (boxes, ul([
-                "A card sitting on the page is `surface.raised` with a border. It needs no shadow.",
+                "A card sitting on the page is `surface.raised`. It needs no border and no shadow: the tone does the work. Use `h-card--outlined` when you need a line.",
                 "Menus, popovers and toasts use `surface.overlay` and `shadow.overlay`.",
                 "Dialogs and sheets use `surface.overlay`, `shadow.modal` and a scrim.",
-                "In light, shadows are tinted with Nord's Polar Night so they stay soft and cool.",
+                "In light, shadows are tinted with the palette's own deep color so they stay soft and cool.",
             ])))
     P.section("elevation", "Elevation", body, lead="Tone first. Shadow only for things that float.")
 
 
 def motion():
-    dur_use = {"fast": "Hover and pressed state layers", "base": "Toggles, switches, menus, toasts",
-               "slow": "Dialogs, progress changes", "deliberate": "Page level transitions and large moves"}
+    dur_use = {"micro": "Tiny feedback, like a button press", "fast": "Hover and pressed state layers",
+               "productive": "Work: tables, menus, filters, field focus", "base": "Toggles and menus (2.x name, still works)",
+               "slow": "Dialogs, progress changes", "expressive": "Wins and arrivals: toasts, switches, lifts",
+               "deliberate": "Page level transitions and large moves"}
     ease_use = {"standard": "Most movement and color changes", "enter": "Things appearing on screen, decelerating",
-                "exit": "Things leaving the screen, accelerating"}
+                "exit": "Things leaving the screen, accelerating",
+                "productive": "Work motion. From IBM Carbon, productive standard",
+                "productive-enter": "Work motion arriving", "productive-exit": "Work motion leaving",
+                "expressive": "Expressive motion without a bounce",
+                "spring": "A small overshoot. Use for switches, toasts, and lifts, never for data"}
     rows = ""
     for key, ms in STATIC["motion"]["duration"].items():
-        ease = STATIC["motion"]["easing"]["standard"]
+        ease = STATIC["motion"]["easing"]["spring" if key in ("expressive", "deliberate") else "productive" if key in ("micro", "fast", "productive") else "standard"]
         rows += ('<div class="doc-motion-row"><div><code class="h-code">%s</code><div class="h-body-sm h-text-subtle h-mt-4">%dms</div></div>'
                  '<div class="doc-motion-track"><div class="doc-motion-dot"></div></div>'
                  '<button class="h-button h-button--outline h-button--sm" data-motion data-ms="%d" data-ease="%s">Play</button></div>' % (key, ms, ms, ease))
@@ -567,7 +567,7 @@ def motion():
         ['<code class="h-code">%s</code>' % k, '<code class="h-code">%s</code>' % v, ease_use[k]] for k, v in STATIC["motion"]["easing"].items()])
     durs = table(["Token", ">Duration", "Use"], [
         ['<code class="h-code">%s</code>' % k, "%dms" % v, dur_use[k]] for k, v in STATIC["motion"]["duration"].items()])
-    body = ('<p class="doc-p">Motion explains change. It is quick, never decorative, and it disappears for anyone who asks for reduced motion: every duration token becomes 0ms.</p>'
+    body = ('<p class="doc-p">Two kinds of motion, borrowed from IBM Carbon. Productive motion is quick and quiet and belongs to work. Expressive motion has a little spring and belongs to wins and arrivals. It disappears for anyone who asks for reduced motion: every duration token becomes 0ms.</p>'
             '<h3 class="doc-h3">Durations</h3>%s<div>%s</div><h3 class="doc-h3">Easing</h3>%s' % (durs, rows, easing))
     P.section("motion", "Motion", body, lead="Material curves, short durations, and none at all when asked.")
 
@@ -697,7 +697,7 @@ def accessibility():
             '<h3 class="doc-h3">Rules for using the system</h3>%s'
             '<p class="doc-p h-text-subtle">The full checklist every component passes is in <code class="h-code">docs/ACCESSIBILITY.md</code>.</p>' % (t, keys, ul([
                 "Never convey meaning by color alone. Status needs an icon or a word as well. Links inside running text keep their underline.",
-                "Do not put raw Nord colors on text. Use semantic tokens.",
+                "Do not put raw palette colors on text. Use semantic tokens.",
                 "Label every control with a visible `h-label`, or `aria-label` for icon only buttons.",
                 "Test with a keyboard, a screen reader, 200 percent zoom, reduced motion and forced colors.",
             ])))
@@ -944,12 +944,14 @@ def build():
       <button type="button" data-theme-set="dark" aria-pressed="true">%(moon)s<span class="doc-segmented-label">Dark</span></button>
       <button type="button" data-theme-set="light" aria-pressed="false">%(sun)s<span class="doc-segmented-label">Light</span></button>
     </div>
+    <div class="h-select"><select data-palette-select aria-label="Palette">%(palette_options)s</select>%(chev)s</div>
     <label class="h-switch"><input type="checkbox" role="switch" data-contrast-toggle><span>High contrast</span></label>
   </div>
-</header>""" % {"menu": I("menu"), "mark": C.MARK("h-icon--lg h-icon--brand"), "v": VERSION, "moon": I("moon", "h-icon--sm"), "sun": I("sun", "h-icon--sm")}
+</header>""" % {"menu": I("menu"), "mark": C.MARK("h-icon--lg h-icon--brand"), "v": VERSION, "moon": I("moon", "h-icon--sm"), "sun": I("sun", "h-icon--sm"), "chev": I("chevron-down"),
+        "palette_options": "".join('<option value="%s">%s</option>' % (k, v["label"]) for k, v in PALETTES.items())}
 
     footer = ('<footer class="doc-footer doc-wrap">Hali design language %s. Built from the files in this repository by '
-              '<code class="h-code">scripts/build_site.py</code>. Colors are from the Nord palette by Arctic Ice Studio.</footer>' % VERSION)
+              '<code class="h-code">scripts/build_site.py</code>. The Nord palette, kept as an opt in, is by Arctic Ice Studio.</footer>' % VERSION)
 
     css = "\n".join(read(p) for p in ("tokens/hali-tokens.css", "css/hali.css")) + "\n" + A.DOC_CSS
     css += "\n.doc-dot { display:inline-block; width:14px; height:14px; margin-right:8px; border:1px solid var(--hali-border-strong); border-radius:4px; vertical-align:-2px; }\n"
@@ -963,10 +965,10 @@ def build():
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="dark light">
 <title>Hali design language %(v)s</title>
-<meta name="description" content="Hali is a dark first design language for web applications: Nord at its core, Atlassian structure, Material 3 tonal surfaces, readable by default.">
+<meta name="description" content="Hali is a dark first design language for web applications: soft where you touch, crisp where you read. Five palettes, Atlassian structure, Material 3 depth, IBM Carbon rigor.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <script>%(head_js)s</script>
 <style>
 %(css)s

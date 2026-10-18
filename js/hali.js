@@ -1,11 +1,11 @@
-/*! Hali design language v2.1.0
- * Optional behavior for tabs, dropdowns, dialogs, chips, segmented controls, toasts and sortable tables, selectable tables with search, density and a batch bar, and inline editing.
+/*! Hali design language v3.0.0
+ * Optional behavior for tabs, dropdowns, dialogs, chips, segmented controls, toasts and sortable tables, selectable tables with search, density and a batch bar, inline editing, and palette and theme switching.
  * No dependencies. Everything is opt in through data attributes.
  */
 (function () {
   'use strict';
 
-  var VERSION = '2.1.0';
+  var VERSION = '3.0.0';
 
   function all(selector, root) {
     return Array.prototype.slice.call((root || document).querySelectorAll(selector));
@@ -362,5 +362,50 @@
     });
   });
 
-  window.Hali = { version: VERSION, toast: toast };
+  // Palette and theme switching. The choice is remembered in this browser and applied to <html>.
+  // To avoid a flash on load, call Hali.restore() in a tiny inline script in <head> before the CSS paints.
+  var PALETTES = ['polar', 'aurora', 'ember', 'midnight', 'nord'];
+
+  function store(key, value) {
+    try {
+      if (value === null) { window.localStorage.removeItem(key); } else { window.localStorage.setItem(key, value); }
+    } catch (e) { /* storage can be blocked: the choice then lasts for this page only */ }
+  }
+
+  function read(key) {
+    try { return window.localStorage.getItem(key); } catch (e) { return null; }
+  }
+
+  function setPalette(name) {
+    var root = document.documentElement;
+    if (!name || name === 'polar' || PALETTES.indexOf(name) === -1) {
+      root.removeAttribute('data-palette');
+      store('hali-palette', null);
+    } else {
+      root.setAttribute('data-palette', name);
+      store('hali-palette', name);
+    }
+    return root.getAttribute('data-palette') || 'polar';
+  }
+
+  function setTheme(mode) {
+    var root = document.documentElement;
+    if (mode === 'dark' || mode === 'light') {
+      root.setAttribute('data-theme', mode);
+      store('hali-theme', mode);
+    } else {
+      root.removeAttribute('data-theme');
+      store('hali-theme', null);
+    }
+    return root.getAttribute('data-theme') || 'system';
+  }
+
+  function restore() {
+    var palette = read('hali-palette');
+    var theme = read('hali-theme');
+    if (palette) { setPalette(palette); }
+    if (theme) { setTheme(theme); }
+  }
+
+  window.Hali = { version: VERSION, toast: toast, palettes: PALETTES, setPalette: setPalette, setTheme: setTheme, restore: restore };
 })();

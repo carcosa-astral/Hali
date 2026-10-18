@@ -3,7 +3,7 @@
 ## How the pieces fit
 
 ```
-scripts/build_tokens.py   Nord palette + rules  ->  tokens/hali-tokens.json
+scripts/build_tokens.py   Palettes + rules   ->  tokens/hali-tokens.json
                                                 ->  tokens/hali-tokens.css
                                                 ->  tokens/CONTRAST.md
 css/hali.css              reads only --hali-* custom properties from the tokens CSS
@@ -18,8 +18,10 @@ tables, and the contrast report is produced by the same code that picks the valu
 
 ## Token layers
 
-1. **Raw Nord.** The sixteen Nord colors, exposed as `--hali-nord-0` to `--hali-nord-15`. Use these for
-   illustration, syntax themes and brand art. Do not use them for UI text or fills.
+1. **Raw palette.** Sixteen slots per palette, exposed as `--hali-palette-0` to `--hali-palette-15`. They
+   follow the active `data-palette`. Use them for illustration, charts and syntax themes. Do not use them
+   for UI text or fills. The 2.x names `--hali-nord-0` to `--hali-nord-15` remain as fixed stock Nord values
+   and are deprecated.
 2. **Semantic tokens.** The roles components use: `surface.*`, `text.*`, `icon.*`, `border.*`,
    `brand.*`, status (`danger.*`, `warning.*`, `success.*`, `info.*`, `discovery.*`), `accent.*`,
    `state.*`, `shadow.*`. These change per theme.
