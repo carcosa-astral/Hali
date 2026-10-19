@@ -8,7 +8,7 @@ design language is spelled out in [docs/VERSIONING.md](docs/VERSIONING.md).
 
 ## [Unreleased]
 
-## [3.0.0] - 2026-10-18
+## [3.0.0] - 2026-10-19
 
 Hali stops looking like an enterprise console. Version 3 is soft where you touch and crisp where you read:
 pill controls, borderless cards that get their depth from tone, a halo of brand light, deeper surfaces, and
