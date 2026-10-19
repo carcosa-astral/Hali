@@ -73,7 +73,7 @@ nothing is a surprise.
 
 - Every token name and role, except the `nord.*` JSON keys above.
 - Every class name. Nothing was renamed or removed.
-- All 78 icons and 57 16px icons, and their ids.
+- Every 2.x icon and its id. The set grew from 78 to 84, and the 16px set from 57 to 66; nothing was renamed or removed.
 - The theme attributes `data-theme` and `data-contrast`.
 - Breakpoints, spacing scale, row heights.
 - Supported browsers. The new styles use `color-mix()`, which every supported browser already has.

@@ -318,6 +318,12 @@
   /* Accent: icons added in 2.1.0 draw one detail (a ripple arc, ring or dot) with --hali-icon-accent. It is
      the icon color unless .h-icon--duo is set, so every icon still works as a single color icon. */
   .h-icon--duo { --hali-icon-accent: var(--hali-brand-text); }
+  /* On a bold fill the brand accent would sit on the brand color and disappear, so the accent
+     falls back to the label color and the icon stays a single color icon. */
+  .h-button--bold .h-icon--duo,
+  .h-button--danger .h-icon--duo,
+  .h-lozenge--bold .h-icon--duo,
+  .h-skip .h-icon--duo { --hali-icon-accent: currentColor; }
   /* The 16px set (icons/hali-icons-16.svg) is drawn on a 16 grid, so the stroke is 1.5px, not 1.75px. */
   .h-icon--16 { width: 16px; height: 16px; stroke-width: 1.5; }
 

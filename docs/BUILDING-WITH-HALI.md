@@ -285,14 +285,14 @@ Every page gets a short intro line under its title. Every empty space gets an em
 
 ## Icons
 
-78 icons in `icons/hali-icons.svg` and 57 of them again in `icons/hali-icons-16.svg`.
+84 icons in `icons/hali-icons.svg` and 66 of them again in `icons/hali-icons-16.svg`.
 
 ```html
 <svg class="h-icon" aria-hidden="true"><use href="#i-search"/></svg>
 <svg class="h-icon h-icon--16" aria-hidden="true"><use href="#i16-search"/></svg>
 ```
 
-Sizes: `h-icon--sm` 16px, default 20px, `h-icon--lg` 24px. Use the 16px set inside small controls and dense tables. Add `h-icon--duo` to the 30 icons added in 2.1.0 to color their ripple accent with the brand color.
+Sizes: `h-icon--sm` 16px, default 20px, `h-icon--lg` 24px. Use the 16px set inside small controls and dense tables. Add `h-icon--duo` to the icons that have a ripple accent (the 30 added in 2.1.0, plus `palette` and `eye-off`) to color that accent with the brand color. On a bold or danger fill the accent falls back to the label color by itself, so it never disappears.
 
 Icon only buttons need `aria-label` on the button. Decorative icons get `aria-hidden="true"`.
 

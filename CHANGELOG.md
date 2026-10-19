@@ -47,6 +47,10 @@ unchanged. Shape, size, type and the default palette are not, which is why this 
 - **`type-hero`** (56/58) and `--hali-font-display`.
 - **New components:** `h-hero` (with a ripple ring motif), `h-stat`, `h-bars`, `h-search`, `h-halo`,
   `h-sidenav--float` with `h-appshell--float`, and `h-lozenge--live`.
+- **Six icons,** taking the set to 84. `arrow-up`, `arrow-down`, `minus`, `unlock` and `eye-off` complete
+  pairs that 2.x left one sided, and `palette` names the new palette switcher. The 16px set grows from 57
+  to 66: the six above plus `trending-up`, `wifi` and `activity`, which the new trend and status lozenges
+  need at small sizes.
 - `docs/BUILDING-WITH-HALI.md`: a working guide with setup, tokens, class cheat sheet, copy and paste patterns,
   icon use, voice rules and the list of known gaps.
 - `docs/MIGRATING-3.0.md`.

@@ -24,9 +24,10 @@ K = 2.0 / 3.0
 SET = """search plus close check chevron-down chevron-up chevron-left chevron-right arrow-right arrow-left
 arrow-up-down menu more user users bell home info warning error success trash edit copy link external filter
 sliders calendar clock star eye lock download upload refresh help folder file inbox mail grid chart settings
-dollar tag play pause map-pin image heart message share send globe grip list""".split()
+dollar tag play pause map-pin image heart message share send globe grip list
+arrow-up arrow-down minus unlock eye-off palette trending-up activity wifi""".split()
 
-# Hand tuned replacements, as inner markup on the 16 grid. Empty at 2.1.0: the generated set passed review.
+# Hand tuned replacements, as inner markup on the 16 grid. Empty at 3.0.0: the generated set passed review.
 OVERRIDES = {}
 
 
